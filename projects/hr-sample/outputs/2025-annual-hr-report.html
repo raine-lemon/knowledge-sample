@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2025 인사운영 결산 · (주)나린테크 가상 샘플</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500;700;800&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --page:#eef1f5; --surface:#fbfcfd; --surface-2:#f4f6fa; --stamp:#fdf6e8;
+  --ink1:#101419; --ink2:#4a5361; --ink3:#6b7382;
+  --line:#dfe4ea; --line-2:#e8ecf1; --axis:#c3cad4;
+  --s1:#2a78d6; --s2:#eb6834; --neg:#e34948;
+  --o1:#86b6ef; --o2:#5598e7; --o3:#2a78d6; --o4:#1c5cab;
+  --good:#0ca30c; --warn:#a8710a; --crit:#d03b3b;
+  --tipbg:#101419; --tipink:#f7f8fa;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --page:#0b0d11; --surface:#16191f; --surface-2:#1c2027; --stamp:#241f14;
+    --ink1:#f3f5f8; --ink2:#b8c0cc; --ink3:#9aa2b0;
+    --line:#252a33; --line-2:#20242b; --axis:#4b5462;
+    --s1:#3987e5; --s2:#d95926; --neg:#e66767;
+    --o1:#6da7ec; --o2:#3987e5; --o3:#256abf; --o4:#184f95;
+    --good:#0ca30c; --warn:#e0aa3c; --crit:#e66767;
+    --tipbg:#f3f5f8; --tipink:#101419;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --page:#0b0d11; --surface:#16191f; --surface-2:#1c2027; --stamp:#241f14;
+  --ink1:#f3f5f8; --ink2:#b8c0cc; --ink3:#9aa2b0;
+  --line:#252a33; --line-2:#20242b; --axis:#4b5462;
+  --s1:#3987e5; --s2:#d95926; --neg:#e66767;
+  --o1:#6da7ec; --o2:#3987e5; --o3:#256abf; --o4:#184f95;
+  --good:#0ca30c; --warn:#e0aa3c; --crit:#e66767;
+  --tipbg:#f3f5f8; --tipink:#101419;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--page); color:var(--ink1);
+  font-family:"IBM Plex Sans KR","Apple SD Gothic Neo",system-ui,-apple-system,sans-serif;
+  font-size:15px; line-height:1.72; -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1000px; margin:0 auto; padding:34px 20px 72px;}
+.mono{font-family:"IBM Plex Mono","IBM Plex Sans KR",ui-monospace,monospace;}
+h1,h2,h3,h4{font-family:"Gothic A1","IBM Plex Sans KR",system-ui,sans-serif; text-wrap:balance; margin:0;}
+h1{font-size:clamp(28px,4.6vw,42px); font-weight:800; letter-spacing:-0.03em; line-height:1.2;}
+h2{font-size:clamp(19px,2.4vw,23px); font-weight:700; letter-spacing:-0.02em;}
+h3{font-size:16px; font-weight:700; letter-spacing:-0.01em;}
+p{margin:0}
+
+/* ---- cover ---- */
+.cover{border-top:2px solid var(--ink1); padding-top:14px;}
+.eyebrow{font-size:11.5px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink3);}
+.lede{margin-top:12px; color:var(--ink2); max-width:64ch; font-size:16px;}
+.meta{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(216px,1fr)); gap:1px;
+  margin-top:22px; background:var(--line); border:1px solid var(--line);
+}
+.meta > div{background:var(--surface); padding:10px 13px;}
+.meta dt{font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink3); margin:0;}
+.meta dd{margin:3px 0 0; font-size:13.5px; color:var(--ink1);}
+.stamp{
+  display:flex; gap:11px; align-items:flex-start; margin-top:18px; padding:12px 15px;
+  background:var(--stamp); border:1px solid var(--line); color:var(--ink2); font-size:13.5px;
+}
+.stamp b{color:var(--warn); display:block; font-size:11.5px; letter-spacing:0.1em; text-transform:uppercase;}
+.stamp .ic{font-size:15px; line-height:1.4;}
+
+/* ---- sections ---- */
+section{margin-top:52px;}
+.shead{display:flex; align-items:baseline; gap:12px; border-bottom:1px solid var(--ink1); padding-bottom:8px;}
+.snum{font-size:12px; color:var(--ink3); letter-spacing:0.08em; flex:none;}
+.ssrc{margin-left:auto; font-size:11px; color:var(--ink3); text-align:right;}
+section > p{margin-top:16px; max-width:74ch; color:var(--ink2);}
+section > p strong, li strong{color:var(--ink1); font-weight:600;}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:18px; margin-top:20px;}
+
+/* ---- hero + tiles ---- */
+.hero{
+  display:grid; grid-template-columns:minmax(210px,auto) 1fr; gap:26px; align-items:end;
+  margin-top:22px; padding:20px 22px; background:var(--surface); border:1px solid var(--line);
+}
+.hero .big{font-size:clamp(46px,8vw,66px); font-weight:700; line-height:0.98; letter-spacing:-0.035em;
+  font-family:"Gothic A1","IBM Plex Sans KR",sans-serif;}
+.hero .lab{font-size:12.5px; color:var(--ink3); letter-spacing:0.04em;}
+.delta{display:inline-flex; align-items:center; gap:5px; font-size:13px; margin-top:8px; color:var(--crit); font-weight:600;}
+.hero .say{color:var(--ink2); font-size:14.5px; max-width:52ch;}
+.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(148px,1fr)); gap:1px; background:var(--line);
+  border:1px solid var(--line); margin-top:18px;}
+.tile{background:var(--surface); padding:13px 15px;}
+.tile .v{font-size:25px; font-weight:700; letter-spacing:-0.02em; font-family:"Gothic A1","IBM Plex Sans KR",sans-serif;}
+.tile .l{font-size:11.5px; color:var(--ink3); margin-top:2px;}
+.tile .d{font-size:11.5px; margin-top:4px; color:var(--ink2);}
+.up{color:var(--crit)} .down{color:var(--good)} .flat{color:var(--ink3)}
+
+/* ---- charts ---- */
+.chart{margin:22px 0 0; padding:16px 18px 14px; background:var(--surface); border:1px solid var(--line);}
+.chart figcaption{display:flex; gap:10px; align-items:baseline; margin-bottom:4px;}
+.cnum{font-size:11px; color:var(--ink3); letter-spacing:0.1em; flex:none;
+  font-family:"IBM Plex Mono",monospace;}
+.ctitle{font-size:13.5px; font-weight:600; color:var(--ink1); font-family:"Gothic A1","IBM Plex Sans KR",sans-serif;}
+.legend{display:flex; flex-wrap:wrap; gap:14px; margin:6px 0 10px;}
+.k{display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:var(--ink2);}
+.sw{width:11px; height:11px; border-radius:2px; display:inline-block; flex:none;}
+.sw.s1{background:var(--s1)} .sw.s2{background:var(--s2)} .sw.neg{background:var(--neg)}
+.sw.rule{height:3px; border-radius:0; background:var(--axis); width:14px;}
+.plot{overflow-x:auto; padding-bottom:2px;}
+.plot svg{display:block; width:100%; max-width:720px; min-width:520px; height:auto;}
+.cap{margin-top:10px; font-size:12px; color:var(--ink3); max-width:74ch;}
+
+/* svg primitives */
+.gl{stroke:var(--line); stroke-width:1}
+.bl{stroke:var(--axis); stroke-width:1}
+.sep{stroke:var(--line); stroke-width:1}
+.rl{stroke:var(--axis); stroke-width:1}
+.rlt{fill:var(--ink3); font-size:10.5px; font-family:"IBM Plex Mono",monospace;}
+.band{fill:var(--surface-2)}
+.bandt{fill:var(--ink3); font-size:10.5px; letter-spacing:0.08em; font-family:"IBM Plex Mono",monospace;}
+.tk{fill:var(--ink3); font-size:11px; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;}
+.cat{fill:var(--ink2); font-size:11.5px; font-weight:500;}
+.val{fill:var(--ink1); font-size:11.5px; font-weight:600; font-family:"IBM Plex Mono",monospace;}
+.val2{fill:var(--ink2); font-size:11.5px; font-weight:600; font-family:"IBM Plex Mono",monospace;}
+.cap-s{fill:var(--ink3); font-size:10.5px;}
+.b1{fill:var(--s1)} .b2{fill:var(--s2)} .bneg{fill:var(--neg)}
+.o1{fill:var(--o1)} .o2{fill:var(--o2)} .o3{fill:var(--o3)} .o4{fill:var(--o4)}
+.ln1{fill:none; stroke:var(--s1); stroke-width:2; stroke-linejoin:round; stroke-linecap:round}
+.ln2{fill:none; stroke:var(--s2); stroke-width:2; stroke-linejoin:round; stroke-linecap:round}
+.area1{fill:var(--s1); opacity:0.10}
+.dt1{fill:var(--s1); stroke:var(--surface); stroke-width:2}
+.dt2{fill:var(--s2); stroke:var(--surface); stroke-width:2}
+.ruletick{stroke:var(--axis); stroke-width:2.5}
+.hit{fill:transparent; cursor:crosshair}
+[data-tip]{cursor:default}
+[data-tip].hot{opacity:0.82}
+
+/* ---- tables ---- */
+.tw{overflow-x:auto; margin-top:20px; border:1px solid var(--line); background:var(--surface);}
+table{border-collapse:collapse; width:100%; font-size:13px; min-width:480px;}
+caption{caption-side:top; text-align:left; padding:11px 14px 9px; font-size:12.5px; color:var(--ink3);
+  border-bottom:1px solid var(--line);}
+caption b{color:var(--ink1); font-weight:600; font-size:13px;}
+th,td{padding:8px 12px; text-align:right; border-bottom:1px solid var(--line-2);
+  font-variant-numeric:tabular-nums; white-space:nowrap;}
+th:first-child,td:first-child{text-align:left; font-variant-numeric:normal;}
+thead th{font-size:11px; letter-spacing:0.04em; color:var(--ink3); font-weight:600; text-transform:none;
+  border-bottom:1px solid var(--axis); background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+tr.sum td{font-weight:700; background:var(--surface-2);}
+tr.mark td{background:color-mix(in srgb, var(--s1) 7%, var(--surface));}
+td.hi{font-weight:700;}
+.bar{display:block; text-align:left;}
+.mini{display:inline-block; height:8px; border-radius:0 2px 2px 0; background:var(--s1); vertical-align:middle;}
+.mini.alt{background:var(--s2)}
+td.bar{text-align:left; width:118px;}
+
+/* ---- timeline ---- */
+.tl{list-style:none; margin:20px 0 0; padding:0;}
+.tl li{display:grid; grid-template-columns:104px 1fr; gap:16px; padding:13px 0; border-top:1px solid var(--line);}
+.tl li:last-child{border-bottom:1px solid var(--line);}
+.tl .d{font-size:12px; color:var(--ink2); font-family:"IBM Plex Mono",monospace; padding-top:2px;}
+.tl .kind{font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink3);}
+.tl .body{font-size:14px; color:var(--ink2);}
+.tl .body b{color:var(--ink1);}
+.tl li.out .d, .tl li.out .body{opacity:0.72}
+
+/* ---- flags & lists ---- */
+.flags{display:grid; gap:12px; margin-top:20px;}
+.flag{display:grid; grid-template-columns:26px 1fr; gap:12px; padding:14px 16px; background:var(--surface);
+  border:1px solid var(--line);}
+.flag .ic{font-size:15px; line-height:1.3;}
+.flag h3{font-size:13.5px;}
+.flag p{margin-top:5px; font-size:13px; color:var(--ink2);}
+ul.task{list-style:none; margin:18px 0 0; padding:0;}
+ul.task li{padding:10px 0 10px 26px; border-top:1px solid var(--line); position:relative; color:var(--ink2); font-size:14px;}
+ul.task li:last-child{border-bottom:1px solid var(--line);}
+ul.task li::before{content:"□"; position:absolute; left:2px; top:9px; color:var(--ink3);}
+ul.plain{margin:14px 0 0; padding-left:20px; color:var(--ink2);}
+ul.plain li{margin:5px 0;}
+
+/* ---- footer ---- */
+footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); font-size:12px; color:var(--ink3);}
+footer code{font-size:11.5px; color:var(--ink2); background:var(--surface); padding:1px 5px; border:1px solid var(--line);}
+footer .cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; margin-top:12px;}
+
+/* ---- tooltip ---- */
+.tip{position:fixed; top:0; left:0; z-index:99; pointer-events:none; opacity:0;
+  background:var(--tipbg); color:var(--tipink); font-size:12px; padding:5px 9px; border-radius:3px;
+  white-space:nowrap; font-variant-numeric:tabular-nums; box-shadow:0 2px 10px rgba(0,0,0,0.18);
+  transition:opacity .1s linear;}
+@media (prefers-reduced-motion: reduce){ .tip{transition:none} }
+:focus-visible{outline:2px solid var(--s1); outline-offset:2px;}
+@media (max-width:640px){
+  .hero{grid-template-columns:1fr; align-items:start; gap:14px;}
+  .tl li{grid-template-columns:1fr; gap:4px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="cover">
+<p class="eyebrow mono">Annual HR Report · FY2025 · 분석판</p>
+<h1>2025년 인사운영 결산</h1>
+<p class="lede">조직이 가장 빠르게 커진 해이면서, 유지 비용도 같이 커진 해. 인력·이직·채용·수습·평가 다섯 축을 2024년과 나란히 놓고 다시 집계했다.</p>
+<dl class="meta"><div><dt>대상기간</dt><dd>2025-01-01 ~ 2025-12-31</dd></div><div><dt>비교 기준</dt><dd>2024년 (참고 구간 2026H1)</dd></div><div><dt>원천</dt><dd>1차 리포트 17건 재집계</dd></div><div><dt>진실원</dt><dd>2025-annual-hr-report.md</dd></div></dl>
+<div class="stamp"><span class="ic">⚠</span><div><b>가상 샘플 데이터</b>원천 데이터는 지식관리 파이프라인 검증용으로 생성한 가상 기업 (주)나린테크의 문서다. 실존 기업·인물과 무관하며 실제 인사 의사결정의 근거로 사용할 수 없다.</div></div>
+</header>
+<section id="summary">
+<div class="shead"><span class="snum mono">§0</span><h2>요약</h2><span class="ssrc">2025 연간 인사운영 보고서 · 반기 리포트 2건 · 분기 리포트 4건</span></div>
+<div class="hero"><div><div class="lab">2025 자발적 이직률</div><div class="big">13.8<span style="font-size:0.5em">%</span></div><div class="delta">▲ 1.6%p <span style="color:var(--ink3);font-weight:400">vs 2024 (12.2%)</span></div></div><p class="say">자발 퇴사 26명 ÷ 연평균 재직 188.2명. 순증 18명·채용 49명으로 3년 중 가장 크게 성장한 해에, 스스로 나간 사람도 가장 많았다.</p></div>
+<div class="tiles"><div class="tile"><div class="v">198명</div><div class="l">기말 재직</div><div class="d flat">+18명 vs 2024</div></div><div class="tile"><div class="v">49명</div><div class="l">연간 채용</div><div class="d flat">+7명 · 관측 최대</div></div><div class="tile"><div class="v">87.8%</div><div class="l">수습 전환율</div><div class="d up">▼ 2.7%p</div></div><div class="tile"><div class="v">8.7%</div><div class="l">S등급 비율 (규정 10%)</div><div class="d up">5개 차수 연속 미달</div></div><div class="tile"><div class="v">41건</div><div class="l">등급 변경 (2차수)</div><div class="d flat">하향 25 · 상향 16</div></div><div class="tile"><div class="v">10건</div><div class="l">이의신청</div><div class="d up">+3건 · 인용 4건</div></div></div>
+<p>2025년의 결산은 세 문장으로 줄어든다. <strong>첫째, 성장은 채용이 아니라 정착에서 샜다</strong> — 채용은 7명 늘었지만 수습 미전환이 4명에서 6명으로 늘어 순효과를 상쇄했다. <strong>둘째, 이직률 상승은 추세보다 Q1 사건성 변동에 가깝다</strong> — 분기 이직률은 4.4% → 3.2% → 3.7% → 2.6%로 연중 내려갔다. <strong>셋째, 평가 제도는 2025년에 관찰을 끝내고 2026년에 움직였다</strong> — 보정회의 시범 2차수에서 하향 우위가 재확인되면서 의무화 결정으로 이어졌다.</p>
+</section>
+<section id="headcount">
+<div class="shead"><span class="snum mono">§1</span><h2>인력 현황</h2><span class="ssrc">2025 연간 보고서 §1–2 · 채용이직 분석 「분기별인력이동」</span></div>
+<p>기말 198명. 순증 18명은 채용 49명 − 퇴사 31명으로 정확히 맞고, 분기 사슬(기초+채용−퇴사=기말)도 8개 분기 전부 닫힌다.</p>
+<figure class="chart"><figcaption><span class="cnum">Chart 1</span><span class="ctitle">분기말 재직 인원 — 2024 Q1 ~ 2025 Q4</span></figcaption><div class="plot"><svg viewBox="0 0 720 226" role="img" aria-label="분기말 재직 인원 추이 2024-2025"><rect class="band" x="374" y="18" width="332" height="178"></rect><text class="bandt" x="380" y="14" text-anchor="start">2025</text><line class="gl" x1="46" y1="196" x2="706" y2="196"></line><line class="gl" x1="46" y1="158.22" x2="706" y2="158.22"></line><line class="gl" x1="46" y1="120.44" x2="706" y2="120.44"></line><line class="gl" x1="46" y1="82.67" x2="706" y2="82.67"></line><line class="gl" x1="46" y1="44.89" x2="706" y2="44.89"></line><line class="bl" x1="46" y1="196" x2="706" y2="196"></line><text class="tk" x="38" y="200" text-anchor="end">160</text><text class="tk" x="38" y="162.22" text-anchor="end">170</text><text class="tk" x="38" y="124.44" text-anchor="end">180</text><text class="tk" x="38" y="86.67" text-anchor="end">190</text><text class="tk" x="38" y="48.89" text-anchor="end">200</text><text class="tk" x="52" y="214" text-anchor="middle">기초</text><text class="tk" x="132.5" y="214" text-anchor="middle">24Q1</text><text class="tk" x="213" y="214" text-anchor="middle">24Q2</text><text class="tk" x="293.5" y="214" text-anchor="middle">24Q3</text><text class="tk" x="374" y="214" text-anchor="middle">24Q4</text><text class="tk" x="454.5" y="214" text-anchor="middle">25Q1</text><text class="tk" x="535" y="214" text-anchor="middle">25Q2</text><text class="tk" x="615.5" y="214" text-anchor="middle">25Q3</text><text class="tk" x="696" y="214" text-anchor="middle">25Q4</text><path class="area1" d="M52,196 L52,177.11 L132.5,158.22 L213,150.67 L293.5,139.33 L374,120.44 L454.5,105.33 L535,86.44 L615.5,78.89 L696,52.44 L696,196 Z"></path><polyline class="ln1" points="52,177.11 132.5,158.22 213,150.67 293.5,139.33 374,120.44 454.5,105.33 535,86.44 615.5,78.89 696,52.44"></polyline><circle class="dt1" cx="52" cy="177.11" r="4.5"></circle><circle class="hit" cx="52" cy="177.11" r="11" data-tip="기초 · 재직 165명"></circle><circle class="dt1" cx="132.5" cy="158.22" r="4.5"></circle><circle class="hit" cx="132.5" cy="158.22" r="11" data-tip="24Q1 · 재직 170명"></circle><circle class="dt1" cx="213" cy="150.67" r="4.5"></circle><circle class="hit" cx="213" cy="150.67" r="11" data-tip="24Q2 · 재직 172명"></circle><circle class="dt1" cx="293.5" cy="139.33" r="4.5"></circle><circle class="hit" cx="293.5" cy="139.33" r="11" data-tip="24Q3 · 재직 175명"></circle><circle class="dt1" cx="374" cy="120.44" r="4.5"></circle><circle class="hit" cx="374" cy="120.44" r="11" data-tip="24Q4 · 재직 180명"></circle><circle class="dt1" cx="454.5" cy="105.33" r="4.5"></circle><circle class="hit" cx="454.5" cy="105.33" r="11" data-tip="25Q1 · 재직 184명"></circle><circle class="dt1" cx="535" cy="86.44" r="4.5"></circle><circle class="hit" cx="535" cy="86.44" r="11" data-tip="25Q2 · 재직 189명"></circle><circle class="dt1" cx="615.5" cy="78.89" r="4.5"></circle><circle class="hit" cx="615.5" cy="78.89" r="11" data-tip="25Q3 · 재직 191명"></circle><circle class="dt1" cx="696" cy="52.44" r="4.5"></circle><circle class="hit" cx="696" cy="52.44" r="11" data-tip="25Q4 · 재직 198명"></circle><text class="val" x="692" y="38.44" text-anchor="end">198명</text><text class="val" x="58" y="165.11" text-anchor="start">165명</text></svg></div><p class="cap">기초 165명 → 기말 198명. 2025년 순증 18명은 2024년(+15명)보다 크다.</p></figure>
+<figure class="chart"><figcaption><span class="cnum">Chart 2</span><span class="ctitle">분기별 채용·퇴사 인원</span></figcaption><div class="legend"><span class="k"><i class="sw s1"></i>채용</span><span class="k"><i class="sw s2"></i>퇴사</span></div><div class="plot"><svg viewBox="0 0 720 226" role="img" aria-label="분기별 채용과 퇴사 인원"><line class="gl" x1="40" y1="196" x2="706" y2="196"></line><line class="gl" x1="40" y1="153.5" x2="706" y2="153.5"></line><line class="gl" x1="40" y1="111" x2="706" y2="111"></line><line class="gl" x1="40" y1="68.5" x2="706" y2="68.5"></line><line class="gl" x1="40" y1="26" x2="706" y2="26"></line><line class="bl" x1="40" y1="196" x2="706" y2="196"></line><text class="tk" x="32" y="200" text-anchor="end">0</text><text class="tk" x="32" y="157.5" text-anchor="end">4</text><text class="tk" x="32" y="115" text-anchor="end">8</text><text class="tk" x="32" y="72.5" text-anchor="end">12</text><text class="tk" x="32" y="30" text-anchor="end">16</text><path class="b1" d="M60.62,196 V72.5 Q60.62,68.5 64.62,68.5 H76.62 Q80.62,68.5 80.62,72.5 V196 Z" data-tip="24Q1 · 채용 12명"></path><path class="b2" d="M82.62,196 V125.62 Q82.62,121.62 86.62,121.62 H98.62 Q102.62,121.62 102.62,125.62 V196 Z" data-tip="24Q1 · 퇴사 7명"></path><text class="tk" x="81.62" y="214" text-anchor="middle">24Q1</text><path class="b1" d="M143.88,196 V93.75 Q143.88,89.75 147.88,89.75 H159.88 Q163.88,89.75 163.88,93.75 V196 Z" data-tip="24Q2 · 채용 10명"></path><path class="b2" d="M165.88,196 V115 Q165.88,111 169.88,111 H181.88 Q185.88,111 185.88,115 V196 Z" data-tip="24Q2 · 퇴사 8명"></path><text class="tk" x="164.88" y="214" text-anchor="middle">24Q2</text><path class="b1" d="M227.12,196 V104.38 Q227.12,100.38 231.12,100.38 H243.12 Q247.12,100.38 247.12,104.38 V196 Z" data-tip="24Q3 · 채용 9명"></path><path class="b2" d="M249.12,196 V136.25 Q249.12,132.25 253.12,132.25 H265.12 Q269.12,132.25 269.12,136.25 V196 Z" data-tip="24Q3 · 퇴사 6명"></path><text class="tk" x="248.12" y="214" text-anchor="middle">24Q3</text><path class="b1" d="M310.38,196 V83.12 Q310.38,79.12 314.38,79.12 H326.38 Q330.38,79.12 330.38,83.12 V196 Z" data-tip="24Q4 · 채용 11명"></path><path class="b2" d="M332.38,196 V136.25 Q332.38,132.25 336.38,132.25 H348.38 Q352.38,132.25 352.38,136.25 V196 Z" data-tip="24Q4 · 퇴사 6명"></path><text class="tk" x="331.38" y="214" text-anchor="middle">24Q4</text><path class="b1" d="M393.62,196 V61.88 Q393.62,57.88 397.62,57.88 H409.62 Q413.62,57.88 413.62,61.88 V196 Z" data-tip="25Q1 · 채용 13명"></path><path class="b2" d="M415.62,196 V104.38 Q415.62,100.38 419.62,100.38 H431.62 Q435.62,100.38 435.62,104.38 V196 Z" data-tip="25Q1 · 퇴사 9명"></path><text class="tk" x="414.62" y="214" text-anchor="middle">25Q1</text><path class="b1" d="M476.88,196 V72.5 Q476.88,68.5 480.88,68.5 H492.88 Q496.88,68.5 496.88,72.5 V196 Z" data-tip="25Q2 · 채용 12명"></path><path class="b2" d="M498.88,196 V125.62 Q498.88,121.62 502.88,121.62 H514.88 Q518.88,121.62 518.88,125.62 V196 Z" data-tip="25Q2 · 퇴사 7명"></path><text class="tk" x="497.88" y="214" text-anchor="middle">25Q2</text><path class="b1" d="M560.12,196 V93.75 Q560.12,89.75 564.12,89.75 H576.12 Q580.12,89.75 580.12,93.75 V196 Z" data-tip="25Q3 · 채용 10명"></path><path class="b2" d="M582.12,196 V115 Q582.12,111 586.12,111 H598.12 Q602.12,111 602.12,115 V196 Z" data-tip="25Q3 · 퇴사 8명"></path><text class="tk" x="581.12" y="214" text-anchor="middle">25Q3</text><path class="b1" d="M643.38,196 V51.25 Q643.38,47.25 647.38,47.25 H659.38 Q663.38,47.25 663.38,51.25 V196 Z" data-tip="25Q4 · 채용 14명"></path><path class="b2" d="M665.38,196 V125.62 Q665.38,121.62 669.38,121.62 H681.38 Q685.38,121.62 685.38,125.62 V196 Z" data-tip="25Q4 · 퇴사 7명"></path><text class="tk" x="664.38" y="214" text-anchor="middle">25Q4</text><text class="bandt" x="414.62" y="18" text-anchor="start">2025</text><line class="sep" x1="373" y1="22" x2="373" y2="196"></line></svg></div><p class="cap">채용은 Q4(14명)에 최다, 퇴사는 Q1(9명)에 최다. 채용이 퇴사를 밑돈 분기는 없다.</p></figure>
+<div class="tw"><table style="min-width:560px"><caption><b>분기별 인력 이동</b> — 자발/비자발 분해</caption><thead><tr><th>분기</th><th>기초</th><th>채용</th><th>퇴사</th><th>자발</th><th>비자발</th><th>기말</th><th>순증</th><th>분기 이직률</th></tr></thead><tbody><tr class="mark"><td>2025 Q1</td><td>180</td><td>13</td><td>9</td><td>8</td><td>1</td><td>184</td><td>+4</td><td>4.4%</td></tr><tr class="mark"><td>2025 Q2</td><td>184</td><td>12</td><td>7</td><td>6</td><td>1</td><td>189</td><td>+5</td><td>3.2%</td></tr><tr class="mark"><td>2025 Q3</td><td>189</td><td>10</td><td>8</td><td>7</td><td>1</td><td>191</td><td>+2</td><td>3.7%</td></tr><tr class="mark"><td>2025 Q4</td><td>191</td><td>14</td><td>7</td><td>5</td><td>2</td><td>198</td><td>+7</td><td>2.6%</td></tr><tr class="sum"><td>2025 계</td><td>180</td><td>49</td><td>31</td><td>26</td><td>5</td><td>198</td><td>+18</td><td>13.8% (연)</td></tr><tr class="sum"><td>2024 계</td><td>165</td><td>42</td><td>27</td><td>21</td><td>6</td><td>180</td><td>+15</td><td>12.2% (연)</td></tr></tbody></table></div><p class="cap">분기 이직률 = 자발퇴사 ÷ 분기 평균인원, 연환산하지 않은 실측치.</p>
+<div class="tw"><table style="min-width:540px"><caption><b>본부별 기말 재직과 채용 강도</b></caption><thead><tr><th>본부</th><th>2024</th><th>2025</th><th>증감</th><th>비중</th><th>채용</th><th>채용/재직</th></tr></thead><tbody><tr class=""><td>플랫폼개발본부</td><td>51</td><td>55</td><td>+4</td><td>27.8%</td><td>11</td><td>20.0%</td></tr><tr class=""><td>서비스개발본부</td><td>43</td><td>47</td><td>+4</td><td>23.7%</td><td>11</td><td>23.4%</td></tr><tr class=""><td>사업본부</td><td>36</td><td>40</td><td>+4</td><td>20.2%</td><td>9</td><td>22.5%</td></tr><tr class=""><td>데이터본부</td><td>25</td><td>28</td><td>+3</td><td>14.1%</td><td>10</td><td><span class="hi">35.7%</span></td></tr><tr class=""><td>경영지원본부</td><td>25</td><td>28</td><td>+3</td><td>14.1%</td><td>8</td><td>28.6%</td></tr><tr class="sum"><td>계</td><td>180</td><td>198</td><td>+18</td><td>100.0%</td><td>49</td><td>24.7%</td></tr></tbody></table></div><p class="cap">데이터본부는 재직 28명에 연간 채용 10명 — 전사 평균(24.7%)의 1.4배. 코호트 스냅샷에서 「이직(타사)」 최다 본부(8건)도 데이터본부다(§8).</p>
+</section>
+<section id="turnover">
+<div class="shead"><span class="snum mono">§2</span><h2>이직</h2><span class="ssrc">2025 연간 보고서 §3 · 분기 리포트 §1·§4</span></div>
+<p>산식은 <strong>자발 퇴사자 ÷ 연평균 재직 인원</strong>이고, 연평균 재직은 분기 평균의 평균이다 (2025년 188.2명 · 2024년 172.4명). 26 ÷ 188.2 = 13.8%.</p>
+<figure class="chart"><figcaption><span class="cnum">Chart 3</span><span class="ctitle">분기 자발적 이직률 — 2024 vs 2025</span></figcaption><div class="legend"><span class="k"><i class="sw s1"></i>2025</span><span class="k"><i class="sw s2"></i>2024</span></div><div class="plot"><svg viewBox="0 0 720 216" role="img" aria-label="분기 자발적 이직률 2024 대 2025"><line class="gl" x1="46" y1="186" x2="660" y2="186"></line><line class="gl" x1="46" y1="154" x2="660" y2="154"></line><line class="gl" x1="46" y1="122" x2="660" y2="122"></line><line class="gl" x1="46" y1="90" x2="660" y2="90"></line><line class="gl" x1="46" y1="58" x2="660" y2="58"></line><line class="gl" x1="46" y1="26" x2="660" y2="26"></line><line class="bl" x1="46" y1="186" x2="660" y2="186"></line><text class="tk" x="38" y="190" text-anchor="end">0%</text><text class="tk" x="38" y="158" text-anchor="end">1%</text><text class="tk" x="38" y="126" text-anchor="end">2%</text><text class="tk" x="38" y="94" text-anchor="end">3%</text><text class="tk" x="38" y="62" text-anchor="end">4%</text><text class="tk" x="38" y="30" text-anchor="end">5%</text><text class="tk" x="76" y="204" text-anchor="middle">Q1</text><text class="tk" x="264" y="204" text-anchor="middle">Q2</text><text class="tk" x="452" y="204" text-anchor="middle">Q3</text><text class="tk" x="640" y="204" text-anchor="middle">Q4</text><polyline class="ln2" points="76,90 264,54.8 452,93.2 640,112.4"></polyline><polyline class="ln1" points="76,45.2 264,83.6 452,67.6 640,102.8"></polyline><circle class="dt2" cx="76" cy="90" r="4.5"></circle><circle class="hit" cx="76" cy="90" r="11" data-tip="2024 Q1 · 3.0%"></circle><circle class="dt2" cx="264" cy="54.8" r="4.5"></circle><circle class="hit" cx="264" cy="54.8" r="11" data-tip="2024 Q2 · 4.1%"></circle><circle class="dt2" cx="452" cy="93.2" r="4.5"></circle><circle class="hit" cx="452" cy="93.2" r="11" data-tip="2024 Q3 · 2.9%"></circle><circle class="dt2" cx="640" cy="112.4" r="4.5"></circle><circle class="hit" cx="640" cy="112.4" r="11" data-tip="2024 Q4 · 2.3%"></circle><circle class="dt1" cx="76" cy="45.2" r="4.5"></circle><circle class="hit" cx="76" cy="45.2" r="11" data-tip="2025 Q1 · 4.4%"></circle><circle class="dt1" cx="264" cy="83.6" r="4.5"></circle><circle class="hit" cx="264" cy="83.6" r="11" data-tip="2025 Q2 · 3.2%"></circle><circle class="dt1" cx="452" cy="67.6" r="4.5"></circle><circle class="hit" cx="452" cy="67.6" r="11" data-tip="2025 Q3 · 3.7%"></circle><circle class="dt1" cx="640" cy="102.8" r="4.5"></circle><circle class="hit" cx="640" cy="102.8" r="11" data-tip="2025 Q4 · 2.6%"></circle><text class="val" x="88" y="37.2" text-anchor="start">2025</text><text class="val2" x="88" y="106" text-anchor="start">2024</text></svg></div><p class="cap">2025년은 Q1(4.4%)에서 시작해 Q4(2.6%)로 내려왔다. 연간 +1.6%p의 대부분은 Q1에서 만들어졌다.</p></figure>
+<div class="tw"><table style="min-width:520px"><caption><b>자발 퇴사 사유</b> — 구성비는 2년째 거의 동일</caption><thead><tr><th>사유</th><th>2024</th><th>비중</th><th>2025</th><th>비중</th><th>2025 분포</th></tr></thead><tbody><tr class=""><td>이직(타사)</td><td>11</td><td>52.4%</td><td>13</td><td>50.0%</td><td><span class="bar"><span class="mini" style="width:100px"></span></span></td></tr><tr class=""><td>개인사유</td><td>6</td><td>28.6%</td><td>8</td><td>30.8%</td><td><span class="bar"><span class="mini" style="width:62px"></span></span></td></tr><tr class=""><td>창업/이직준비</td><td>4</td><td>19.0%</td><td>5</td><td>19.2%</td><td><span class="bar"><span class="mini" style="width:38px"></span></span></td></tr><tr class="sum"><td>계</td><td>21</td><td>100.0%</td><td>26</td><td>100.0%</td><td></td></tr></tbody></table></div><p class="cap">사유의 성격이 바뀐 것이 아니라 같은 성격의 이탈이 5명 늘었다. 비자발 퇴사는 6명 → 5명으로 줄었다. 분기 리포트 합산은 사유별로 1명씩 다르다 — §9 정합성 점검 1번.</p>
+</section>
+<section id="recruit">
+<div class="shead"><span class="snum mono">§3</span><h2>채용</h2><span class="ssrc">분기 리포트 §2–3 · 채용이직 분석 「채용퍼널」</span></div>
+<p>2025년은 분기 채용 퍼널 집계가 도입된 첫 해다. 2024년은 같은 기준의 데이터가 없어 비교 대상이 없다.</p>
+<figure class="chart"><figcaption><span class="cnum">Chart 4</span><span class="ctitle">연간 채용 퍼널 — 지원 1,207명 → 최종합격 49명</span></figcaption><div class="plot"><svg viewBox="0 0 720 218" role="img" aria-label="2025 연간 채용 퍼널"><path class="o1" d="M92,18 H624 Q628,18 628,22 V44 Q628,48 624,48 H92 Z" data-tip="지원 1,207명"></path><text class="cat" x="82" y="37" text-anchor="end">지원</text><text class="val" x="638" y="37" text-anchor="start">1,207명</text><path class="o2" d="M92,64 H230.99 Q234.99,64 234.99,68 V90 Q234.99,94 230.99,94 H92 Z" data-tip="서류통과 322명"></path><text class="cat" x="82" y="83" text-anchor="end">서류통과</text><text class="val" x="244.99" y="83" text-anchor="start">322명</text><text class="cap-s" x="104" y="60" text-anchor="start">↓ 통과 26.7%</text><path class="o3" d="M92,110 H157.28 Q161.28,110 161.28,114 V136 Q161.28,140 157.28,140 H92 Z" data-tip="면접진행 156명"></path><text class="cat" x="82" y="129" text-anchor="end">면접진행</text><text class="val" x="171.28" y="129" text-anchor="start">156명</text><text class="cap-s" x="104" y="106" text-anchor="start">↓ 통과 48.4%</text><path class="o4" d="M92,156 H109.76 Q113.76,156 113.76,160 V182 Q113.76,186 109.76,186 H92 Z" data-tip="최종합격 49명"></path><text class="cat" x="82" y="175" text-anchor="end">최종합격</text><text class="val" x="123.76" y="175" text-anchor="start">49명</text><text class="cap-s" x="104" y="152" text-anchor="start">↓ 통과 31.4%</text><text class="cap-s" x="92" y="204" text-anchor="start">지원자 대비 최종 합격 4.1%</text></svg></div><p class="cap">단계 색은 퍼널 깊이(순서형 램프)이며 크기와 중복 인코딩하지 않는다.</p></figure>
+<div class="tw"><table style="min-width:520px"><caption><b>분기별 퍼널 전환율</b></caption><thead><tr><th>분기</th><th>지원</th><th>서류통과율</th><th>면접전환율</th><th>합격전환율</th><th>최종합격</th></tr></thead><tbody><tr class=""><td>Q1</td><td>312</td><td>26.9%</td><td>48.8%</td><td>31.7%</td><td>13</td></tr><tr class=""><td>Q2</td><td>298</td><td>26.5%</td><td>48.1%</td><td>31.6%</td><td>12</td></tr><tr class=""><td>Q3</td><td>256</td><td>26.6%</td><td>48.5%</td><td>30.3%</td><td>10</td></tr><tr class=""><td>Q4</td><td>341</td><td>26.7%</td><td>48.4%</td><td>31.8%</td><td>14</td></tr><tr class="sum"><td>계</td><td>1,207</td><td>26.7%</td><td>48.4%</td><td>31.4%</td><td>49</td></tr></tbody></table></div><p class="cap">단계별 통과율은 네 분기 내내 ±0.4%p 안에서 움직였다. 채용량 변동은 전환율이 아니라 지원자 유입량(256~341명)으로 설명된다 — 병목은 퍼널 효율이 아니라 파이프라인 규모다.</p>
+</section>
+<section id="probation">
+<div class="shead"><span class="snum mono">§4</span><h2>수습 전환</h2><span class="ssrc">분기 리포트 §5 · 취업규칙(2025 개정) 제12–14조</span></div>
+<figure class="chart"><figcaption><span class="cnum">Chart 5</span><span class="ctitle">분기별 수습 전환율 (2025)</span></figcaption><div class="legend"><span class="k"><i class="sw s1"></i>분기 전환율</span><span class="k"><i class="sw rule"></i>2024 연간 90.5%</span></div><div class="plot"><svg viewBox="0 0 720 216" role="img" aria-label="2025 분기별 수습 전환율"><line class="gl" x1="52" y1="186" x2="706" y2="186"></line><line class="gl" x1="52" y1="134" x2="706" y2="134"></line><line class="gl" x1="52" y1="82" x2="706" y2="82"></line><line class="gl" x1="52" y1="30" x2="706" y2="30"></line><line class="bl" x1="52" y1="186" x2="706" y2="186"></line><text class="tk" x="44" y="190" text-anchor="end">70%</text><text class="tk" x="44" y="138" text-anchor="end">80%</text><text class="tk" x="44" y="86" text-anchor="end">90%</text><text class="tk" x="44" y="34" text-anchor="end">100%</text><path class="b1" d="M121.75,186 V114.08 Q121.75,110.08 125.75,110.08 H141.75 Q145.75,110.08 145.75,114.08 V186 Z" data-tip="2025 Q1 · 전환 11/13명 (84.6%)"></path><text class="val" x="133.75" y="101.08" text-anchor="middle">84.6%</text><text class="tk" x="133.75" y="204" text-anchor="middle">Q1</text><path class="b1" d="M285.25,186 V77.16 Q285.25,73.16 289.25,73.16 H305.25 Q309.25,73.16 309.25,77.16 V186 Z" data-tip="2025 Q2 · 전환 11/12명 (91.7%)"></path><text class="val" x="297.25" y="64.16" text-anchor="middle">91.7%</text><text class="tk" x="297.25" y="204" text-anchor="middle">Q2</text><path class="b1" d="M448.75,186 V138 Q448.75,134 452.75,134 H468.75 Q472.75,134 472.75,138 V186 Z" data-tip="2025 Q3 · 전환 8/10명 (80.0%)"></path><text class="val" x="460.75" y="125" text-anchor="middle">80.0%</text><text class="tk" x="460.75" y="204" text-anchor="middle">Q3</text><path class="b1" d="M612.25,186 V70.92 Q612.25,66.92 616.25,66.92 H632.25 Q636.25,66.92 636.25,70.92 V186 Z" data-tip="2025 Q4 · 전환 13/14명 (92.9%)"></path><text class="val" x="624.25" y="57.92" text-anchor="middle">92.9%</text><text class="tk" x="624.25" y="204" text-anchor="middle">Q4</text><line class="rl" x1="52" y1="79.4" x2="706" y2="79.4"></line><text class="rlt" x="58" y="74.4" text-anchor="start">2024 연간 90.5%</text><line class="sep" x1="379" y1="24" x2="379" y2="186"></line><text class="bandt" x="385" y="20" text-anchor="start">수습 6→3개월 시행 (07-01)</text></svg></div><p class="cap">2025-07-01 취업규칙 개정으로 수습기간이 6개월 → 3개월로 단축되고 3분기 입사자부터 적용됐다. 그 첫 분기가 연중 최저(80.0%)지만 분모가 10명이라 1명이 10%p를 움직인다 — 인과로 읽을 수 없다.</p></figure>
+<div class="tw"><table style="min-width:460px"><caption><b>수습 전환 집계</b></caption><thead><tr><th>구간</th><th>입사</th><th>정규 전환</th><th>미전환</th><th>전환율</th></tr></thead><tbody><tr class=""><td>2025 Q1</td><td>13</td><td>11</td><td>2</td><td>84.6%</td></tr><tr class=""><td>2025 Q2</td><td>12</td><td>11</td><td>1</td><td>91.7%</td></tr><tr class=""><td>2025 Q3</td><td>10</td><td>8</td><td>2</td><td><span class="hi">80.0%</span></td></tr><tr class=""><td>2025 Q4</td><td>14</td><td>13</td><td>1</td><td>92.9%</td></tr><tr class="sum"><td>2025 계</td><td>49</td><td>43</td><td>6</td><td>87.8%</td></tr><tr class="sum"><td>2024 계</td><td>42</td><td>38</td><td>4</td><td>90.5%</td></tr></tbody></table></div><p class="cap">수습평가는 지침 제10조에 따라 30-60-90일 목표 달성 여부로 판단하는 절대 판정이며 등급 분포를 적용하지 않는다. 기준 미달 시 1회 1개월 연장(취업규칙 제13조 제3항)을 거친 뒤에도 미달한 경우가 미전환이다.</p>
+</section>
+<section id="evaluation">
+<div class="shead"><span class="snum mono">§5</span><h2>성과평가 — 2차수</h2><span class="ssrc">2025 반기 리포트 2건 · 2024·2026H1 반기 리포트</span></div>
+<p>평가 대상 = 반기말 재직 − 수습 중 인원. 2025H1은 189 − 12 = 177명, 2025H2는 198 − 14 = 184명이다.</p>
+<figure class="chart"><figcaption><span class="cnum">Chart 6</span><span class="ctitle">등급 분포 — 규정치 대비 실제치</span></figcaption><div class="legend"><span class="k"><i class="sw s1"></i>2025H1</span><span class="k"><i class="sw s2"></i>2025H2</span><span class="k"><i class="sw rule"></i>규정 비율</span></div><div class="plot"><svg viewBox="0 0 720 226" role="img" aria-label="등급 분포 규정치 대비 실제치"><line class="gl" x1="46" y1="196" x2="706" y2="196"></line><line class="gl" x1="46" y1="165.82" x2="706" y2="165.82"></line><line class="gl" x1="46" y1="135.64" x2="706" y2="135.64"></line><line class="gl" x1="46" y1="105.45" x2="706" y2="105.45"></line><line class="gl" x1="46" y1="75.27" x2="706" y2="75.27"></line><line class="gl" x1="46" y1="45.09" x2="706" y2="45.09"></line><line class="bl" x1="46" y1="196" x2="706" y2="196"></line><text class="tk" x="38" y="200" text-anchor="end">0%</text><text class="tk" x="38" y="169.82" text-anchor="end">10%</text><text class="tk" x="38" y="139.64" text-anchor="end">20%</text><text class="tk" x="38" y="109.45" text-anchor="end">30%</text><text class="tk" x="38" y="79.27" text-anchor="end">40%</text><text class="tk" x="38" y="49.09" text-anchor="end">50%</text><path class="b1" d="M89,196 V172.84 Q89,168.84 93,168.84 H107 Q111,168.84 111,172.84 V196 Z" data-tip="2025H1 · S등급 16명 (9.0%)"></path><path class="b2" d="M113,196 V173.74 Q113,169.74 117,169.74 H131 Q135,169.74 135,173.74 V196 Z" data-tip="2025H2 · S등급 16명 (8.7%)"></path><line class="ruletick" x1="84" y1="165.82" x2="140" y2="165.82" data-tip="S등급 규정 비율 10%"></line><text class="cat" x="112" y="214" text-anchor="middle">S등급</text><path class="b1" d="M221,196 V135.11 Q221,131.11 225,131.11 H239 Q243,131.11 243,135.11 V196 Z" data-tip="2025H1 · A등급 38명 (21.5%)"></path><path class="b2" d="M245,196 V134.51 Q245,130.51 249,130.51 H263 Q267,130.51 267,134.51 V196 Z" data-tip="2025H2 · A등급 40명 (21.7%)"></path><line class="ruletick" x1="216" y1="135.64" x2="272" y2="135.64" data-tip="A등급 규정 비율 20%"></line><text class="cat" x="244" y="214" text-anchor="middle">A등급</text><path class="b1" d="M353,196 V43.05 Q353,39.05 357,39.05 H371 Q375,39.05 375,43.05 V196 Z" data-tip="2025H1 · B등급 92명 (52.0%)"></path><path class="b2" d="M377,196 V42.45 Q377,38.45 381,38.45 H395 Q399,38.45 399,42.45 V196 Z" data-tip="2025H2 · B등급 96명 (52.2%)"></path><line class="ruletick" x1="348" y1="45.09" x2="404" y2="45.09" data-tip="B등급 규정 비율 50%"></line><text class="cat" x="376" y="214" text-anchor="middle">B등급</text><path class="b1" d="M485,196 V155.63 Q485,151.63 489,151.63 H503 Q507,151.63 507,155.63 V196 Z" data-tip="2025H1 · C등급 26명 (14.7%)"></path><path class="b2" d="M509,196 V155.63 Q509,151.63 513,151.63 H527 Q531,151.63 531,155.63 V196 Z" data-tip="2025H2 · C등급 27명 (14.7%)"></path><line class="ruletick" x1="480" y1="150.73" x2="536" y2="150.73" data-tip="C등급 규정 비율 15%"></line><text class="cat" x="508" y="214" text-anchor="middle">C등급</text><path class="b1" d="M617,196 V191.55 Q617,187.55 621,187.55 H635 Q639,187.55 639,191.55 V196 Z" data-tip="2025H1 · D등급 5명 (2.8%)"></path><path class="b2" d="M641,196 V191.85 Q641,187.85 645,187.85 H659 Q663,187.85 663,191.85 V196 Z" data-tip="2025H2 · D등급 5명 (2.7%)"></path><line class="ruletick" x1="612" y1="180.91" x2="668" y2="180.91" data-tip="D등급 규정 비율 5%"></line><text class="cat" x="640" y="214" text-anchor="middle">D등급</text><text class="rlt" x="674" y="172.91" text-anchor="end">규정치</text></svg></div><p class="cap">두 차수 모두 S·D가 규정에 미달하고 A·B가 초과한다. 양 끝이 눌리고 가운데가 부푸는 중앙집중 패턴이다.</p></figure>
+<figure class="chart"><figcaption><span class="cnum">Chart 7</span><span class="ctitle">S·D 등급 비율 5개 차수 추이</span></figcaption><div class="legend"><span class="k"><i class="sw s1"></i>S등급</span><span class="k"><i class="sw s2"></i>D등급</span><span class="k"><i class="sw rule"></i>규정선</span></div><div class="plot"><svg viewBox="0 0 720 216" role="img" aria-label="차수별 S등급 D등급 비율 추이"><line class="gl" x1="46" y1="186" x2="654" y2="186"></line><line class="gl" x1="46" y1="113.27" x2="654" y2="113.27"></line><line class="gl" x1="46" y1="40.55" x2="654" y2="40.55"></line><line class="bl" x1="46" y1="186" x2="654" y2="186"></line><text class="tk" x="38" y="190" text-anchor="end">0%</text><text class="tk" x="38" y="117.27" text-anchor="end">5%</text><text class="tk" x="38" y="44.55" text-anchor="end">10%</text><line class="rl" x1="46" y1="40.55" x2="654" y2="40.55"></line><text class="rlt" x="52" y="35.55" text-anchor="start">S 규정 10%</text><line class="rl" x1="46" y1="113.27" x2="654" y2="113.27"></line><text class="rlt" x="52" y="108.27" text-anchor="start">D 규정 5%</text><polyline class="ln1" points="74,50.73 215,56.55 356,55.09 497,59.45 638,59.45"></polyline><polyline class="ln2" points="74,140.91 215,142.36 356,145.27 497,146.73 638,140.91"></polyline><circle class="dt1" cx="74" cy="50.73" r="4.5"></circle><circle class="hit" cx="74" cy="50.73" r="11" data-tip="2024H1 · S 9.3%"></circle><circle class="dt1" cx="215" cy="56.55" r="4.5"></circle><circle class="hit" cx="215" cy="56.55" r="11" data-tip="2024H2 · S 8.9%"></circle><circle class="dt1" cx="356" cy="55.09" r="4.5"></circle><circle class="hit" cx="356" cy="55.09" r="11" data-tip="2025H1 · S 9.0%"></circle><circle class="dt1" cx="497" cy="59.45" r="4.5"></circle><circle class="hit" cx="497" cy="59.45" r="11" data-tip="2025H2 · S 8.7%"></circle><circle class="dt1" cx="638" cy="59.45" r="4.5"></circle><circle class="hit" cx="638" cy="59.45" r="11" data-tip="2026H1 · S 8.7%"></circle><circle class="dt2" cx="74" cy="140.91" r="4.5"></circle><circle class="hit" cx="74" cy="140.91" r="11" data-tip="2024H1 · D 3.1%"></circle><circle class="dt2" cx="215" cy="142.36" r="4.5"></circle><circle class="hit" cx="215" cy="142.36" r="11" data-tip="2024H2 · D 3.0%"></circle><circle class="dt2" cx="356" cy="145.27" r="4.5"></circle><circle class="hit" cx="356" cy="145.27" r="11" data-tip="2025H1 · D 2.8%"></circle><circle class="dt2" cx="497" cy="146.73" r="4.5"></circle><circle class="hit" cx="497" cy="146.73" r="11" data-tip="2025H2 · D 2.7%"></circle><circle class="dt2" cx="638" cy="140.91" r="4.5"></circle><circle class="hit" cx="638" cy="140.91" r="11" data-tip="2026H1 · D 3.1%"></circle><text class="val" x="650" y="63.45" text-anchor="start">S등급</text><text class="val2" x="650" y="144.91" text-anchor="start">D등급</text><text class="tk" x="74" y="204" text-anchor="middle">2024H1</text><text class="tk" x="215" y="204" text-anchor="middle">2024H2</text><text class="cat" x="356" y="204" text-anchor="middle">2025H1</text><text class="cat" x="497" y="204" text-anchor="middle">2025H2</text><text class="tk" x="638" y="204" text-anchor="middle">2026H1</text><line class="sep" x1="567.5" y1="26" x2="567.5" y2="186"></line><text class="bandt" x="573.5" y="30" text-anchor="start">기간 외</text></svg></div><p class="cap">강제 분포 도입(2024-03-01) 이후 다섯 차수 연속으로 S는 10%, D는 5% 규정선 아래에 있다. 2026H1은 대상기간 밖이며 방향 확인 목적으로만 표시했다.</p></figure>
+<div class="tw"><table style="min-width:660px"><caption><b>차수별 등급 분포와 이의신청</b></caption><thead><tr><th>차수</th><th>평가대상</th><th>S</th><th>S 비율</th><th>A</th><th>B</th><th>C</th><th>D</th><th>D 비율</th><th>변경</th><th>이의신청</th></tr></thead><tbody><tr class=""><td>2024H1</td><td>162</td><td>15</td><td>9.3%</td><td>34</td><td>84</td><td>24</td><td>5</td><td>3.1%</td><td>18건</td><td>3건</td></tr><tr class=""><td>2024H2</td><td>169</td><td>15</td><td>8.9%</td><td>36</td><td>88</td><td>25</td><td>5</td><td>3.0%</td><td>20건</td><td>4건</td></tr><tr class="mark"><td>2025H1</td><td>177</td><td>16</td><td>9.0%</td><td>38</td><td>92</td><td>26</td><td>5</td><td>2.8%</td><td>19건</td><td>4건</td></tr><tr class="mark"><td>2025H2</td><td>184</td><td>16</td><td>8.7%</td><td>40</td><td>96</td><td>27</td><td>5</td><td>2.7%</td><td>22건</td><td>6건</td></tr><tr class=""><td>2026H1 (참고)</td><td>196</td><td>17</td><td>8.7%</td><td>43</td><td>101</td><td>29</td><td>6</td><td>3.1%</td><td>25건</td><td>10건</td></tr></tbody></table></div><p class="cap">2024년 두 차수의 「변경」은 보정회의가 아니라 2차 평가자의 개별 조정을 사후 집계한 값이다 — 계열 비교 시 정의 차이를 유지해야 한다.</p>
+<figure class="chart"><figcaption><span class="cnum">Chart 8</span><span class="ctitle">등급 상향 vs 하향 — 5개 차수</span></figcaption><div class="legend"><span class="k"><i class="sw s1"></i>등급 상향</span><span class="k"><i class="sw neg"></i>등급 하향</span></div><div class="plot"><svg viewBox="0 0 720 208" role="img" aria-label="차수별 등급 상향 하향 건수"><path class="b1" d="M382,22 H490 Q494,22 494,26 V40 Q494,44 490,44 H382 Z" data-tip="2024H1 · 등급 상향 8건"></path><path class="bneg" d="M378,22 H242 Q238,22 238,26 V40 Q238,44 242,44 H378 Z" data-tip="2024H1 · 등급 하향 10건"></path><text class="val" x="502" y="37" text-anchor="start">8</text><text class="val2" x="230" y="37" text-anchor="end">10</text><text class="cat" x="14" y="37" text-anchor="start">2024H1</text><text class="cap-s" x="86" y="37" text-anchor="start">개별 조정</text><path class="b1" d="M382,58 H504 Q508,58 508,62 V76 Q508,80 504,80 H382 Z" data-tip="2024H2 · 등급 상향 9건"></path><path class="bneg" d="M378,58 H228 Q224,58 224,62 V76 Q224,80 228,80 H378 Z" data-tip="2024H2 · 등급 하향 11건"></path><text class="val" x="516" y="73" text-anchor="start">9</text><text class="val2" x="216" y="73" text-anchor="end">11</text><text class="cat" x="14" y="73" text-anchor="start">2024H2</text><text class="cap-s" x="86" y="73" text-anchor="start">개별 조정</text><path class="b1" d="M382,94 H476 Q480,94 480,98 V112 Q480,116 476,116 H382 Z" data-tip="2025H1 · 등급 상향 7건"></path><path class="bneg" d="M378,94 H214 Q210,94 210,98 V112 Q210,116 214,116 H378 Z" data-tip="2025H1 · 등급 하향 12건"></path><text class="val" x="488" y="109" text-anchor="start">7</text><text class="val2" x="202" y="109" text-anchor="end">12</text><text class="cat" x="14" y="109" text-anchor="start">2025H1</text><text class="cap-s" x="86" y="109" text-anchor="start">시범</text><path class="b1" d="M382,130 H504 Q508,130 508,134 V148 Q508,152 504,152 H382 Z" data-tip="2025H2 · 등급 상향 9건"></path><path class="bneg" d="M378,130 H200 Q196,130 196,134 V148 Q196,152 200,152 H378 Z" data-tip="2025H2 · 등급 하향 13건"></path><text class="val" x="516" y="145" text-anchor="start">9</text><text class="val2" x="188" y="145" text-anchor="end">13</text><text class="cat" x="14" y="145" text-anchor="start">2025H2</text><text class="cap-s" x="86" y="145" text-anchor="start">시범</text><path class="b1" d="M382,166 H532 Q536,166 536,170 V184 Q536,188 532,188 H382 Z" data-tip="2026H1 · 등급 상향 11건"></path><path class="bneg" d="M378,166 H186 Q182,166 182,170 V184 Q182,188 186,188 H378 Z" data-tip="2026H1 · 등급 하향 14건"></path><text class="val" x="544" y="181" text-anchor="start">11</text><text class="val2" x="174" y="181" text-anchor="end">14</text><text class="cat" x="14" y="181" text-anchor="start">2026H1</text><text class="cap-s" x="86" y="181" text-anchor="start">의무화</text><line class="bl" x1="380" y1="14" x2="380" y2="194"></line><text class="cap-s" x="372" y="10" text-anchor="end">◀ 하향</text><text class="cap-s" x="388" y="10" text-anchor="start">상향 ▶</text></svg></div><p class="cap">다섯 차수 모두 하향이 많다. 상향−하향 격차는 −2 · −2 · −5 · −4 · −3건으로 보정회의를 시범 운영한 2025년에 오히려 벌어졌다. 1차 평가가 관대하다는 신호로 두 회의록(2025-03-14 · 2025-09-05)이 동일하게 해석했다.</p></figure>
+<div class="tw"><table style="min-width:620px"><caption><b>보정회의 결과</b> — 2025년은 권고(시범) 단계</caption><thead><tr><th>차수</th><th>단계</th><th>상향</th><th>하향</th><th>유지</th><th>변경 합</th><th>변경률</th></tr></thead><tbody><tr class=""><td>2024H1</td><td>개별 조정</td><td>8건 (4.9%)</td><td>10건 (6.2%)</td><td>144건</td><td>18건</td><td>11.1%</td></tr><tr class=""><td>2024H2</td><td>개별 조정</td><td>9건 (5.3%)</td><td>11건 (6.5%)</td><td>149건</td><td>20건</td><td>11.8%</td></tr><tr class="mark"><td>2025H1</td><td>시범 · 권고</td><td>7건 (4.0%)</td><td>12건 (6.8%)</td><td>158건</td><td>19건</td><td>10.7%</td></tr><tr class="mark"><td>2025H2</td><td>시범 · 권고</td><td>9건 (4.9%)</td><td>13건 (7.1%)</td><td>162건</td><td>22건</td><td>12.0%</td></tr><tr class=""><td>2026H1 (참고)</td><td>의무화</td><td>11건 (5.6%)</td><td>14건 (7.1%)</td><td>171건</td><td>25건</td><td>12.8%</td></tr></tbody></table></div>
+<p>이의신청은 4건(인용 2) + 6건(인용 2) = 연간 10건, 인용률 40%. 평가 대상 대비 접수율은 2.3% → 3.3%로 올랐다. 2026H1에 10건으로 뛰는데, 그 차수는 개정 지침이 <strong>결과 통보 시 등급 근거를 함께 제공</strong>하도록 한 뒤의 첫 차수다 — 근거를 주면 이의신청이 늘어나는 관계로 읽힌다.</p>
+</section>
+<section id="pay">
+<div class="shead"><span class="snum mono">§6</span><h2>처우 반영과 OKR</h2><span class="ssrc">급여규정 제8–9조 · 반기 리포트 §4</span></div>
+<div class="grid2">
+<div class="tw"><table style="min-width:300px"><caption><b>등급별 처우 기준</b></caption><thead><tr><th>등급</th><th>인상률</th><th>상여 (기본급 대비)</th></tr></thead><tbody><tr class=""><td>S</td><td>8.0%</td><td>200%</td></tr><tr class=""><td>A</td><td>5.0%</td><td>150%</td></tr><tr class=""><td>B</td><td>3.0%</td><td>100%</td></tr><tr class=""><td>C</td><td>1.0%</td><td>50%</td></tr><tr class=""><td>D</td><td>0.0%</td><td>0%</td></tr></tbody></table></div>
+<div class="tw"><table style="min-width:360px"><caption><b>실제 분포를 적용한 결과</b></caption><thead><tr><th>차수</th><th>가중평균 인상률</th><th>가중평균 상여</th><th>기한 내 OKR 확정</th></tr></thead><tbody><tr class="mark"><td>2025H1</td><td>3.50%</td><td>109.6%</td><td>11 / 17 (64.7%)</td></tr><tr class="mark"><td>2025H2</td><td>3.49%</td><td>109.5%</td><td>12 / 18 (66.7%)</td></tr><tr class=""><td>2026H1 (참고)</td><td>—</td><td>—</td><td>14 / 19 (73.7%)</td></tr></tbody></table></div>
+</div>
+<p>성과평가 70점은 <strong>대상기간 개시 시점에 확정된</strong> OKR 달성도로 산정한다. 2025년 두 차수 모두 3분의 1 이상 조직이 기한 내 OKR을 확정하지 못했다 — 평가 점수의 근거가 사후에 만들어진 조직이 매 차수 6개 안팎 있었다는 뜻이다. 이 비율은 2026H1에 73.7%로 개선됐다.</p>
+</section>
+<section id="timeline">
+<div class="shead"><span class="snum mono">§7</span><h2>제도 변경·의사결정 경로</h2><span class="ssrc">인사위원회 회의록 2건 · 취업규칙·복무규정 부칙</span></div>
+<p>2025년의 산출물은 숫자가 아니라 이 경로다 — 시범(권고) → 2차수 관찰 → 의무화 결정.</p>
+<ul class="tl"><li><div><div class="d">2025-02-20</div><div class="kind mono">결정</div></div><div class="body"><b>보정회의 시범 도입</b> — 권고 단계, 참석은 본부 재량. 등급 변경 시 사유 기록은 권고.</div></li><li><div><div class="d">2025-03-14</div><div class="kind mono">인사위원회</div></div><div class="body">2024H2 결과 리뷰에서 S·D 미달 확인. 시범 실행계획 확정, 10명 미만 조직의 <b>상위 조직 합산 규정</b>(지침 제5조 제3항) 재안내.</div></li><li><div><div class="d">2025-07-01</div><div class="kind mono">규정 시행</div></div><div class="body"><b>취업규칙 개정</b> — 수습기간 6→3개월, 근속연수 산입, 임금 100%, 1회 1개월 연장, 온보딩 멘토 지정(멘토는 평가자 불가).</div></li><li><div><div class="d">2025-07-01</div><div class="kind mono">규정 시행</div></div><div class="body"><b>복무규정 개정</b> — 근속 1년 미만자 연차 9일 → 11일.</div></li><li><div><div class="d">2025-09-05</div><div class="kind mono">인사위원회</div></div><div class="body">2025H1 결과 검토. <b>보정회의 의무화 검토 착수</b>, 인사담당에 2025-12까지 지침 개정안 초안 제출 지시.</div></li><li class="out"><div><div class="d">2026-01-15</div><div class="kind mono">기간 외</div></div><div class="body">지침 개정 시행 — 보정회의 의무화, 이의신청 기한 14→7일, 결과 통보 시 등급 근거 동시 제공.</div></li></ul>
+<p class="cap">원본 「2025 연간 인사운영 보고서」 §7은 이 중 2건(보정회의 시범 도입, 취업규칙 개정)만 싣는다. 복무규정 개정과 인사위원회 결정 2건은 규정 부칙과 회의록에서 보완했다.</p>
+</section>
+<section id="cohort">
+<div class="shead"><span class="snum mono">§8</span><h2>참고 — 코호트 스냅샷</h2><span class="ssrc">채용이직 분석(2024-2026) 「등급별잔존」·「근속별이직」·「채널별성과」</span></div>
+<div class="stamp"><span class="ic">◷</span><div><b>기간 외 데이터 포함</b>아래 세 그림의 모집단은 2024-Q1 이후 입사 코호트 + 2024 기초 인원이고 근속 기준일은 2026-06-30이다. 2025년 단독 집계가 아니므로 위 지표와 직접 더하거나 비교하지 않는다.</div></div>
+<figure class="chart"><figcaption><span class="cnum">Chart 9</span><span class="ctitle">등급별 자발 이직률 (등급 경험자 기준)</span></figcaption><div class="plot"><svg viewBox="0 0 720 206" role="img" aria-label="등급별 자발 이직률"><line class="gl" x1="46" y1="176" x2="706" y2="176"></line><line class="gl" x1="46" y1="146" x2="706" y2="146"></line><line class="gl" x1="46" y1="116" x2="706" y2="116"></line><line class="gl" x1="46" y1="86" x2="706" y2="86"></line><line class="gl" x1="46" y1="56" x2="706" y2="56"></line><line class="gl" x1="46" y1="26" x2="706" y2="26"></line><line class="bl" x1="46" y1="176" x2="706" y2="176"></line><text class="tk" x="38" y="180" text-anchor="end">0%</text><text class="tk" x="38" y="150" text-anchor="end">5%</text><text class="tk" x="38" y="120" text-anchor="end">10%</text><text class="tk" x="38" y="90" text-anchor="end">15%</text><text class="tk" x="38" y="60" text-anchor="end">20%</text><text class="tk" x="38" y="30" text-anchor="end">25%</text><path class="b1" d="M100,176 V163.2 Q100,159.2 104,159.2 H120 Q124,159.2 124,163.2 V176 Z" data-tip="S등급 경험자 36명 · 자발이직률 2.8%"></path><text class="val" x="112" y="150.2" text-anchor="middle">2.8%</text><text class="cat" x="112" y="194" text-anchor="middle">S등급</text><path class="b1" d="M232,176 V139.2 Q232,135.2 236,135.2 H252 Q256,135.2 256,139.2 V176 Z" data-tip="A등급 경험자 88명 · 자발이직률 6.8%"></path><text class="val" x="244" y="126.2" text-anchor="middle">6.8%</text><text class="cat" x="244" y="194" text-anchor="middle">A등급</text><path class="b1" d="M364,176 V97.8 Q364,93.8 368,93.8 H384 Q388,93.8 388,97.8 V176 Z" data-tip="B등급 경험자 161명 · 자발이직률 13.7%"></path><text class="val" x="376" y="84.8" text-anchor="middle">13.7%</text><text class="cat" x="376" y="194" text-anchor="middle">B등급</text><path class="b1" d="M496,176 V46.8 Q496,42.8 500,42.8 H516 Q520,42.8 520,46.8 V176 Z" data-tip="C등급 경험자 63명 · 자발이직률 22.2%"></path><text class="val" x="508" y="33.8" text-anchor="middle">22.2%</text><text class="cat" x="508" y="194" text-anchor="middle">C등급</text><path class="b1" d="M628,176 V41.4 Q628,37.4 632,37.4 H648 Q652,37.4 652,41.4 V176 Z" data-tip="D등급 경험자 13명 · 자발이직률 23.1%"></path><text class="val" x="640" y="28.4" text-anchor="middle">23.1%</text><text class="cat" x="640" y="194" text-anchor="middle">D등급</text></svg></div><p class="cap">등급이 낮을수록 계단식으로 올라간다 — S 대비 C는 약 7.9배. 중복 없는 최종등급 기준 보조표에서도 5.6% → 6.5% → 14.3% → 28.6% → 33.3%로 같은 방향이 재현된다. 한 사람이 차수마다 다른 등급을 받을 수 있어 연인원 집계이며 합계를 두지 않는다.</p></figure>
+<figure class="chart"><figcaption><span class="cnum">Chart 10</span><span class="ctitle">근속 구간별 자발 이직률</span></figcaption><div class="plot"><svg viewBox="0 0 720 216" role="img" aria-label="근속 구간별 자발 이직률"><line class="gl" x1="46" y1="176" x2="706" y2="176"></line><line class="gl" x1="46" y1="133.14" x2="706" y2="133.14"></line><line class="gl" x1="46" y1="90.29" x2="706" y2="90.29"></line><line class="gl" x1="46" y1="47.43" x2="706" y2="47.43"></line><line class="bl" x1="46" y1="176" x2="706" y2="176"></line><text class="tk" x="38" y="180" text-anchor="end">0%</text><text class="tk" x="38" y="137.14" text-anchor="end">10%</text><text class="tk" x="38" y="94.29" text-anchor="end">20%</text><text class="tk" x="38" y="51.43" text-anchor="end">30%</text><path class="b1" d="M100,176 V87 Q100,83 104,83 H120 Q124,83 124,87 V176 Z" data-tip="1년 미만 · 69명 중 자발퇴사 15명 (21.7%)"></path><text class="val" x="112" y="74" text-anchor="middle">21.7%</text><text class="cat" x="112" y="194" text-anchor="middle">1년 미만</text><path class="b1" d="M232,176 V37.29 Q232,33.29 236,33.29 H252 Q256,33.29 256,37.29 V176 Z" data-tip="1~2.5년 · 63명 중 자발퇴사 21명 (33.3%)"></path><text class="val" x="244" y="24.29" text-anchor="middle">33.3%</text><text class="cat" x="244" y="194" text-anchor="middle">1~2.5년</text><path class="b1" d="M364,176 V74.57 Q364,70.57 368,70.57 H384 Q388,70.57 388,74.57 V176 Z" data-tip="2.5~5년 · 61명 중 자발퇴사 15명 (24.6%)"></path><text class="val" x="376" y="61.57" text-anchor="middle">24.6%</text><text class="cat" x="376" y="194" text-anchor="middle">2.5~5년</text><path class="b1" d="M496,176 V145.71 Q496,141.71 500,141.71 H516 Q520,141.71 520,145.71 V176 Z" data-tip="5~10년 · 87명 중 자발퇴사 7명 (8.0%)"></path><text class="val" x="508" y="132.71" text-anchor="middle">8.0%</text><text class="cat" x="508" y="194" text-anchor="middle">5~10년</text><text class="val" x="640" y="167" text-anchor="middle">0.0%</text><text class="cat" x="640" y="194" text-anchor="middle">10년+</text><text class="cap-s" x="706" y="210" text-anchor="end">10년+ 구간은 n=4 — 비율 신뢰도 낮음</text></svg></div><p class="cap">위험 정점은 입사 1년 미만이 아니라 1~2.5년 구간(33.3%)이다. 현재 제도는 온보딩 90일까지만 설계돼 있고 그 이후 구간에 리텐션 장치가 없다.</p></figure>
+<div class="tw"><table style="min-width:660px"><caption><b>채용 채널별 입사 후 성과</b> — 신입 119명, 관측 창 최대 2.5년</caption><thead><tr><th>채널</th><th>채용</th><th>수습통과율</th><th>평균등급점수</th><th>S+A 비율</th><th>자발이직률</th><th>성과 ↔ 이탈</th></tr></thead><tbody><tr class=""><td>직원추천</td><td>40</td><td>95.0%</td><td><span class="hi">2.52</span></td><td>44.8%</td><td><span class="hi">15.0%</span></td><td><span class="bar"><span class="mini" style="width:100px"></span> <span class="mini alt" style="width:57px"></span></span></td></tr><tr class=""><td>헤드헌팅</td><td>17</td><td>94.1%</td><td>2.27</td><td>27.3%</td><td>23.5%</td><td><span class="bar"><span class="mini" style="width:90px"></span> <span class="mini alt" style="width:89px"></span></span></td></tr><tr class=""><td>인턴전환</td><td>9</td><td>77.8%</td><td>2.29</td><td>42.9%</td><td>22.2%</td><td><span class="bar"><span class="mini" style="width:91px"></span> <span class="mini alt" style="width:84px"></span></span></td></tr><tr class=""><td>채용공고</td><td>38</td><td>86.8%</td><td>2.00</td><td>16.0%</td><td>26.3%</td><td><span class="bar"><span class="mini" style="width:79px"></span> <span class="mini alt" style="width:100px"></span></span></td></tr><tr class=""><td>커리어페어</td><td>15</td><td>86.7%</td><td>1.64</td><td>9.1%</td><td>20.0%</td><td><span class="bar"><span class="mini" style="width:65px"></span> <span class="mini alt" style="width:76px"></span></span></td></tr><tr class="sum"><td>계</td><td>119</td><td>89.9%</td><td>2.19</td><td>28.9%</td><td>21.0%</td><td></td></tr></tbody></table></div><p class="cap">막대는 왼쪽 파랑이 평균등급점수, 오른쪽 주황이 자발이직률(각각 최대값 기준 상대 길이)이다. 평균등급점수는 S=4 … D=0 척도이며 등급 보유자만 평균 대상이다(첫 평가 전 퇴사자 제외).</p>
+</section>
+<section id="flags">
+<div class="shead"><span class="snum mono">§9</span><h2>정합성 점검</h2><span class="ssrc">원문 간 대조에서 발견한 불일치</span></div>
+<div class="flags"><div class="flag"><span class="ic">⚠</span><div><h3>자발 퇴사 사유의 분기 합 ≠ 연간 집계</h3><p>분기 리포트를 합산하면 이직 14 · 개인 7 · 창업 5인데, 연간 보고서는 13 · 8 · 5다. 총합 26명은 같다. 최대잔여법 배분을 분기 단위와 연간 단위에서 각각 적용해 생긴 반올림 차이로 보인다. 본 보고서는 상위 집계인 연간 보고서 값을 채택했다.</p></div></div><div class="flag"><span class="ic">⚠</span><div><h3>회의록의 조번호가 규정 본문과 한 조씩 어긋난다</h3><p>회의록 2025-09-05은 수습기간 3개월을 「취업규칙」 제13조, 연장을 제14조, 온보딩을 제15조로 적었으나 개정 규정 본문은 제12조(수습기간) · 제13조(수습평가·정규 전환) · 제14조(온보딩)다. 본 보고서는 규정 본문 번호를 따랐다.</p></div></div><div class="flag"><span class="ic">⚠</span><div><h3>2025년 리포트가 인용한 급여규정 조번호는 2026 개정판 기준</h3><p>「급여규정」은 2024-03-01 제정, 2026-01-15 개정이다. 개정 부칙 ②가 “종전 등급별 인상률·상여 지급률 기준을 제8조·제9조로 명문화한다”고 밝히므로 기준값 자체는 2025년과 같다. 조번호 인용만 사후 표기다.</p></div></div></div>
+</section>
+<section id="next">
+<div class="shead"><span class="snum mono">§10</span><h2>후속 과제</h2></div>
+<ul class="task"><li><code>templates/annual-report.md</code>(+ <code>.html</code>) 계약을 만들 것인지 결정한다 — 현재는 query-output 계약을 빌려 쓰는 상태다.</li><li>자발 퇴사 사유 배분을 연간·분기 중 어디서 확정할지 <code>data.py</code> 수준에서 정한다(§9-1의 1명 차이 제거).</li><li>근속 1~2.5년 구간(자발이직률 33.3%) 대상 리텐션 장치를 검토한다 — 제도는 온보딩 90일까지만 설계돼 있다.</li><li>채널별 성과 격차(직원추천 2.52 ↔ 커리어페어 1.64)를 채널 배분 결정에 반영할지 판단한다.</li><li>OKR 기한 내 확정률(64.7% → 66.7%)을 평가 결과 확정 조건으로 걸 것인지 검토한다.</li></ul>
+</section>
+<footer>
+<div class="cols"><div><b>진실원</b><br><code>projects/hr-sample/outputs/2025-annual-hr-report.md</code><br>이 페이지는 그 <code>.md</code>에서 재생성하는 뷰다.</div><div><b>원천 (raw/)</b><br>2025 연간 인사운영 보고서 · 2025 반기 인사평가 결과 리포트 2건 · 2025 분기 채용이직 리포트 4건 · 2024 연간·반기 리포트 3건 · 2026 상반기 리포트 · 채용이직 분석(2024-2026) · 인사위원회 회의록 2건 · 취업규칙·복무규정·급여규정</div><div><b>차트 규격</b><br>팔레트는 <code>dataviz</code> 검증기를 이 페이지의 실제 표면색(light <code>#fbfcfd</code> / dark <code>#16191f</code>)으로 재실행해 통과한 조합만 사용 — 2계열 blue↔orange, 발산 blue↔red, 퍼널 4단 순서형 램프, light·dark 각각 PASS. 모든 차트 값은 같은 페이지의 표로도 읽을 수 있다.</div></div>
+<p style="margin-top:16px">가상 샘플 데이터 — (주)나린테크는 지식관리 파이프라인 검증용 가상 기업이며 실존 기업·인물과 무관하다. 작성 2026-08-26.</p>
+</footer>
+</div>
+<script>
+(function(){
+  var tip=document.createElement('div'); tip.className='tip'; document.body.appendChild(tip);
+  var cur=null;
+  function hide(){ tip.style.opacity='0'; if(cur){cur.classList.remove('hot'); cur=null;} }
+  document.addEventListener('mousemove', function(e){
+    var el = e.target && e.target.closest ? e.target.closest('[data-tip]') : null;
+    if(!el){ hide(); return; }
+    if(cur!==el){ if(cur) cur.classList.remove('hot'); el.classList.add('hot'); cur=el;
+      tip.textContent = el.getAttribute('data-tip'); }
+    tip.style.opacity='1';
+    var w=tip.offsetWidth, h=tip.offsetHeight;
+    var x=e.clientX+14, y=e.clientY-h-10;
+    if(x+w>window.innerWidth-8) x=e.clientX-w-14;
+    if(y<8) y=e.clientY+18;
+    tip.style.transform='translate('+x+'px,'+y+'px)';
+  }, {passive:true});
+  document.addEventListener('mouseleave', hide, true);
+  window.addEventListener('blur', hide);
+  window.addEventListener('scroll', hide, {passive:true});
+})();
+</script>
+</body>
+</html>
