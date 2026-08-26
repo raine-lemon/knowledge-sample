@@ -54,9 +54,9 @@
 - **2025 Q3 채용이직 리포트.md** · untracked · (frontmatter 없음) · → —
 - **2025 Q2 채용이직 리포트.md** · untracked · (frontmatter 없음) · → —
 - **2025 Q1 채용이직 리포트.md** · untracked · (frontmatter 없음) · → [[probation-evaluation]], [[recruitment-funnel]]
-- **2024 하반기 인사평가 결과 리포트.md** · untracked · (frontmatter 없음) · → `outputs/runs/2026-08-26-ingest-raine-lemon.md`, [[calibration-meeting]], [[forced-distribution]], [[rater-error-types]]
+- **2024 하반기 인사평가 결과 리포트.md** · untracked · (frontmatter 없음) · → `outputs/runs/2026-08-26-ingest-raine-lemon.md`, `outputs/runs/2026-08-26-maintenance-raine-lemon.md`, [[calibration-meeting]], [[forced-distribution]], [[rater-error-types]]
 - **2024 연간 인사운영 보고서.md** · untracked · (frontmatter 없음) · → `outputs/runs/2026-08-26-ingest-raine-lemon.md`, [[voluntary-turnover-rate]]
-- **2024 상반기 인사평가 결과 리포트.md** · untracked · (frontmatter 없음) · → `outputs/runs/2026-08-26-ingest-raine-lemon.md`, [[calibration-meeting]], [[forced-distribution]], [[rater-error-types]]
+- **2024 상반기 인사평가 결과 리포트.md** · untracked · (frontmatter 없음) · → `outputs/runs/2026-08-26-ingest-raine-lemon.md`, `outputs/runs/2026-08-26-maintenance-raine-lemon.md`, [[calibration-meeting]], [[forced-distribution]], [[rater-error-types]]
 
 ## 2026-08 유입 (3)
 
