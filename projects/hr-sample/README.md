@@ -150,8 +150,17 @@ Clippings/를 거치지 않고 `raw/` 루트에 직접 들어간다 — 계약�
   Pillow로 Slack 대화·HR 대시보드 목업 2쌍(png+ocr.md) 직접 생성. 저장소를
   `personal-knowledge` → `knowledge-sample`로 개명(GitHub rename + 로컬 디렉터리 +
   `team-settings.yaml` 좌표 갱신).
+- 2026-08-26: 코퍼스를 처음 소비하는 산출물 — 2025 연간 인사운영 보고서 분석판(`outputs/`,
+  md 진실원 + html 뷰, 차트 10종). 1차 리포트 17건을 재집계하면서 원문 간 불일치 3건을 찾았다:
+  퇴사 사유의 분기 합 ≠ 연간 집계(각 1명), 회의록 2025-09-05의 취업규칙 조번호 off-by-one,
+  2025 리포트가 인용한 급여규정 조번호가 2026 개정판 기준. 첫 건은 `data.py` 배분 지점 결정 필요.
 
 ## Outputs
+
+| 산출물 | 내용 |
+| --- | --- |
+| `outputs/2025-annual-hr-report.md` | 2025년(작년) 연간 인사운영 보고서 분석판 — 진실원. 1차 리포트 17건 재집계, 원문 간 불일치 3건 기록 |
+| `outputs/2025-annual-hr-report.html` | 같은 보고서의 시각화 뷰 (SVG 차트 10종·표 10종, light/dark). `.md`에서 재생성하는 뷰이며 진실원이 아니다 |
 
 생성 스크립트는 `config/scripts/`에 있다. 전체 재생성:
 
