@@ -7,7 +7,7 @@ originals. Append-only")을 이 문서가 구체화한다. 배경과 실측 근�
 
 ## 레인
 
-raw/는 유입 경로가 다른 3개 레인을 담는다.
+raw/는 유입 경로가 다른 4개 레인을 담는다.
 
 ### 1. 웹 클리핑 (루트 `*.md`)
 
@@ -50,6 +50,33 @@ raw/는 유입 경로가 다른 3개 레인을 담는다.
 - 계약 소유:
   `projects/auto-digest-screenshot-via-telegram/config/skills/telegram-screenshot-digest.md`.
 - `<slug>-<short-hash>.<ext>` + 짝 `.ocr.md`, append-only.
+
+### 4. 변환 원본 (`<확장자>/` 하위 디렉터리)
+
+바이너리 문서를 MD로 변환할 때 **원본 파일 자체**를 보존하는 레인. 변환 산출 MD는
+`Clippings/`로 들어가 1번 레인(웹 클리핑)과 같은 경로로 처리되고, 이 레인에는
+원본만 남는다. 변환은 손실이 있으므로(표 구조·서식·이미지) 원본이 최종 근거다.
+
+| 하위 디렉터리 | 확장자 | 담당 스킬 | 전략 코드 |
+| --- | --- | --- | --- |
+| `pdf/` | `.pdf` | `pdf2md-ingest` | S2 / S4 / S6 |
+| `hwp/` | `.hwp` `.hwpx` | `hwp2md-ingest` | H1 / H3 |
+| `xlsx/` | `.xlsx` `.xlsm` | `xlsx2md-ingest` | X1 / X2 / X3 |
+| `pptx/` | `.pptx` | `pptx2md-ingest` | P1 / P2 / P3 |
+| `docx/` | `.docx` | `docx2md-ingest` | D1 / D2 / D3 |
+
+- 파일명: **원본 파일명 그대로** 유지한다. 변환 MD가 `Clippings/`를 거쳐 1번 레인으로
+  이동할 때 § 파일명 정규화가 적용되지만, 이 레인의 원본은 provenance 문자열
+  (`source_pdf:` 등)이 정확히 가리켜야 하므로 정규화하지 않는다.
+- 중복 게이트: 같은 경로에 파일이 이미 있으면 변환을 중단하고 보고한다(append-only).
+- 변환 MD의 frontmatter는 각 스킬 § 3이 규정한 필수 키를 갖는다. 공통 4키는
+  `source_<ext>`(이 레인의 상대경로), `source_sha256`, `converted_by`(전략 코드),
+  `converted_at`. 나머지는 포맷별로 다르다(pdf `pages`, xlsx `sheets`·`rows`·
+  `truncated`, pptx `slides`·`notes`·`images`, docx `paragraphs`·`tables`·
+  `has_revisions`, hwp `tables`·`images`).
+- 이력: `pdf/`·`hwp/`는 2026-08 각 스킬 § 3에만 정의돼 있었고 이 문서에 레인으로
+  기재되지 않았다. 2026-08-26 `xlsx`·`pptx`·`docx` 3종을 추가하면서 5개를 하나의
+  레인으로 통합 기재했다. 기존 파일의 배치·명명은 바뀌지 않는다.
 
 ## Append-only의 정의
 

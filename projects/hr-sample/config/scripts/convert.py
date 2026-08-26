@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
-"""원문(PDF/HWPX/PPTX) → raw/ 보존 + Clippings/ MD 투입.
+"""원문(PDF/HWPX/XLSX/PPTX/DOCX) → raw/ 보존 + Clippings/ MD 투입.
 
-frontmatter는 각 스킬이 규정한 필수 키를 그대로 따른다:
-  PDF  — pdf2md-ingest §3 (source_pdf·source_sha256·converted_by·converted_at·pages)
-  HWPX — hwp2md-ingest §3 (source_hwp·source_sha256·converted_by·converted_at·tables·images)
-  PPTX — 대응 스킬 없음. 위 패턴에서 유추한 임시 형식 (note 키로 명시).
-  DOCX — 대응 스킬 없음. PPTX와 동일하게 임시 형식 (note 키로 명시).
+각 포맷의 본문 변환은 **해당 스킬의 공식 스크립트를 호출**한다 — hr-sample이 별도
+구현을 갖고 있으면 스킬과 갈라지므로, 문서화된 경로를 그대로 쓴다.
+frontmatter·raw 보존은 각 스킬 §3(산출·마무리) 규정을 따른다.
+
+  PDF  — pdf2md-ingest §3   (source_pdf·sha256·converted_by·converted_at·pages)
+  HWPX — hwp2md-ingest §3   (source_hwp·…·tables·images)
+  XLSX — xlsx2md-ingest §3  (source_xlsx·…·sheets·rows·truncated)
+  PPTX — pptx2md-ingest §3  (source_pptx·…·slides·notes·images)
+  DOCX — docx2md-ingest §3  (source_docx·…·paragraphs·tables·has_revisions)
 """
-import os, sys, hashlib, shutil, pathlib
+import os, sys, json, hashlib, shutil, pathlib, subprocess
 
-VAULT = pathlib.Path(os.path.expanduser("~/personal-knowledge"))
-SRC   = pathlib.Path(os.path.expanduser("~/Documents/hr-samples"))
-TODAY = "2026-08-26"
+VAULT  = pathlib.Path(os.path.expanduser("~/knowledge-sample"))
+SRC    = pathlib.Path(os.path.expanduser("~/Documents/hr-samples"))
+SKILLS = VAULT / "projects/second-brain/config/skills"
+PYBIN  = sys.executable
+TODAY  = "2026-08-26"
 
 def sha(p):
     h = hashlib.sha256()
@@ -32,159 +38,125 @@ def emit(name, text):
     out.write_text(text, encoding="utf-8")
     return out.stat().st_size
 
+def run(script, *args, want_stderr=False):
+    r = subprocess.run([PYBIN, str(script)] + [str(a) for a in args],
+                       capture_output=True, text=True)
+    if r.returncode != 0:
+        raise RuntimeError("%s 실패: %s" % (script.name, r.stderr.strip()[:300]))
+    return (r.stdout, r.stderr) if want_stderr else r.stdout
 
+def split_title(body, fallback):
+    """스크립트 출력 첫 H1을 제목으로 승격 (중복 방지)."""
+    lines = body.strip().splitlines()
+    if lines and lines[0].startswith("# "):
+        return lines[0][2:].strip(), "\n".join(lines[1:]).lstrip("\n")
+    return fallback, body.strip()
+
+def fm(pairs, title, body):
+    head = "\n".join('%s: %s' % (k, v) for k, v in pairs)
+    return "---\n%s\n---\n\n# %s\n\n%s\n" % (head, title, body)
+
+
+# ── HWPX (hwp2md-ingest H1) ──────────────────────────────────────
 def conv_hwpx(src):
     from hwp_hwpx_parser import extract_hwpx
     dst, rel = preserve(src, "hwp")
     text, _ = extract_hwpx(str(dst))
     lines = [l.rstrip() for l in text.splitlines()]
-    title, body = lines[0], "\n\n".join(l for l in lines[1:] if l.strip())
-    md = ("---\n"
-          'source_hwp: "%s"\n'
-          'source_sha256: "%s"\n'
-          "converted_by: H1\n"
-          'converted_at: "%s"\n'
-          "tables: 0\n"
-          "images: %d\n"
-          "---\n\n# %s\n\n%s\n" % (rel, sha(dst), TODAY, text.count("[IMAGE]"), title, body))
+    title = lines[0]
+    body = "\n\n".join(l for l in lines[1:] if l.strip())
+    md = fm([('source_hwp', '"%s"' % rel), ('source_sha256', '"%s"' % sha(dst)),
+             ('converted_by', 'H1'), ('converted_at', '"%s"' % TODAY),
+             ('tables', 0), ('images', text.count("[IMAGE]"))], title, body)
     return emit(src.stem + ".md", md), len(text)
 
 
+# ── PDF (pdf2md-ingest S2) ───────────────────────────────────────
 def conv_pdf(src):
     import pymupdf4llm, fitz
     dst, rel = preserve(src, "pdf")
     pages = fitz.open(str(dst)).page_count
-    body = pymupdf4llm.to_markdown(str(dst), show_progress=False).strip()
-    bl = body.splitlines()
-    if bl and bl[0].startswith("#"):
-        title, body = bl[0].lstrip("# ").strip(), "\n".join(bl[1:]).lstrip("\n")
-    else:
-        title = src.stem
-    md = ("---\n"
-          'source_pdf: "%s"\n'
-          'source_sha256: "%s"\n'
-          "converted_by: S2\n"
-          'converted_at: "%s"\n'
-          "pages: %d\n"
-          "---\n\n# %s\n\n%s\n" % (rel, sha(dst), TODAY, pages, title, body))
+    title, body = split_title(pymupdf4llm.to_markdown(str(dst), show_progress=False),
+                              src.stem)
+    md = fm([('source_pdf', '"%s"' % rel), ('source_sha256', '"%s"' % sha(dst)),
+             ('converted_by', 'S2'), ('converted_at', '"%s"' % TODAY),
+             ('pages', pages)], title, body)
     tables = len([l for l in body.splitlines() if l.strip().startswith("|")])
     return emit(src.stem + ".md", md), tables
 
 
+# ── XLSX (xlsx2md-ingest X1/X2) ──────────────────────────────────
+def conv_xlsx(src):
+    script = SKILLS / "xlsx2md-ingest/scripts/x1-convert.py"
+    dst, rel = preserve(src, "xlsx")
+    # 이 스크립트는 --stats 플래그 대신 stderr 마지막 줄에 `stats k=v ...` 를 낸다.
+    def measure(*extra):
+        body, err = run(script, dst, *extra, want_stderr=True)
+        line = [l for l in err.strip().splitlines() if l.startswith("stats ")][-1]
+        st = {}
+        for tok in line[len("stats "):].split():
+            k, _, v = tok.partition("=")
+            st[k] = v
+        return body, st
+
+    # SKILL §1 라우팅은 **시트별** 판정이다(stderr의 rows는 전 시트 합계이므로
+    # 그 값과 1000을 비교하면 안 된다). --max-rows를 항상 넘겨 스크립트가 시트마다
+    # 1000행 경계를 적용하게 하고, 실제로 자른 시트가 있으면 truncated=true가 온다.
+    body, stats = measure("--max-rows", "1000")
+    truncated = stats.get("truncated") == "true"
+    title, body = split_title(body, src.stem)
+    md = fm([('source_xlsx', '"%s"' % rel), ('source_sha256', '"%s"' % sha(dst)),
+             ('converted_by', 'X2' if truncated else 'X1'),
+             ('converted_at', '"%s"' % TODAY),
+             ('sheets', int(stats.get("sheets", 0))),
+             ('rows', int(stats.get("rows", 0))),
+             ('truncated', 'true' if truncated else 'false')], title, body)
+    return emit(src.stem + ".md", md), int(stats.get("sheets", 0))
+
+
+# ── PPTX (pptx2md-ingest P1) ─────────────────────────────────────
 def conv_pptx(src):
-    from pptx import Presentation
+    script = SKILLS / "pptx2md-ingest/scripts/p1-convert.py"
     dst, rel = preserve(src, "pptx")
-    prs = Presentation(str(dst))
-    slides = list(prs.slides)
-    parts, title = [], src.stem
-    for i, s in enumerate(slides, 1):
-        blocks = [sh.text_frame.text.strip() for sh in s.shapes
-                  if sh.has_text_frame and sh.text_frame.text.strip()]
-        parts.append("<!-- slide %d -->" % i)
-        if i == 1:
-            head = blocks[0].splitlines() if blocks else [src.stem]
-            title = head[0].strip()
-            parts += [x.strip() for x in head[1:] if x.strip()]
-            continue
-        for j, b in enumerate(blocks):
-            bl = b.splitlines()
-            if j == 0:
-                parts.append("## " + bl[0].strip())
-                parts += ["_%s_" % x.strip() for x in bl[1:] if x.strip()]
-            else:
-                for line in bl:
-                    line = line.strip()
-                    if not line: continue
-                    parts.append("- " + line[2:] if line.startswith("• ")
-                                 else "  - " + line[2:] if line.startswith("– ") else line)
-    md = ("---\n"
-          'source_pptx: "%s"\n'
-          'source_sha256: "%s"\n'
-          "converted_by: P1\n"
-          'converted_at: "%s"\n'
-          "slides: %d\n"
-          'note: "pptx 레인은 스킬·raw 계약에 아직 없음 — 계약 확정 전 임시 변환"\n'
-          "---\n\n# %s\n\n%s\n" % (rel, sha(dst), TODAY, len(slides), title,
-                                   "\n\n".join(parts)))
-    return emit(src.stem + ".md", md), len(slides)
+    stats = json.loads(run(script, dst, "--stats"))
+    title, body = split_title(run(script, dst), src.stem)
+    md = fm([('source_pptx', '"%s"' % rel), ('source_sha256', '"%s"' % sha(dst)),
+             ('converted_by', 'P1'), ('converted_at', '"%s"' % TODAY),
+             ('slides', stats["slides"]), ('notes', stats["notes"]),
+             ('images', stats["images"])], title, body)
+    return emit(src.stem + ".md", md), stats["slides"]
 
 
+# ── DOCX (docx2md-ingest D1) ─────────────────────────────────────
 def conv_docx(src):
-    from docx import Document
-    from docx.table import Table
-    from docx.text.paragraph import Paragraph
-    from docx.oxml.ns import qn
+    script = SKILLS / "docx2md-ingest/scripts/d1-convert.py"
     dst, rel = preserve(src, "docx")
-    doc = Document(str(dst))
-    parts, title = [], src.stem
-    first_heading_seen = False
-    n_tables = 0
+    stats = json.loads(run(script, dst, "--stats"))
+    title, body = split_title(run(script, dst), src.stem)
+    md = fm([('source_docx', '"%s"' % rel), ('source_sha256', '"%s"' % sha(dst)),
+             ('converted_by', 'D1'), ('converted_at', '"%s"' % TODAY),
+             ('paragraphs', stats["paragraphs"]), ('tables', stats["tables"]),
+             ('has_revisions', 'true' if stats["has_revisions"] else 'false')],
+            title, body)
+    return emit(src.stem + ".md", md), stats["tables"]
 
-    def para_line(el):
-        text = el.text.strip()
-        if not text:
-            return None
-        style = (el.style.name or "").lower()
-        if style.startswith("heading 1") or style.startswith("title"):
-            return ("h1", text)
-        if style.startswith("heading 2"):
-            return "## " + text
-        if style.startswith("list bullet") or style.startswith("list paragraph"):
-            return "- " + text
-        return text
 
-    def table_lines(tbl):
-        rows = [[c.text.strip() for c in row.cells] for row in tbl.rows]
-        if not rows:
-            return []
-        out = ["", "| " + " | ".join(rows[0]) + " |",
-               "|" + "|".join(["---"] * len(rows[0])) + "|"]
-        for r in rows[1:]:
-            out.append("| " + " | ".join(r) + " |")
-        return out
-
-    # 본문 순서(document order)대로 문단·표를 번갈아 처리한다 —
-    # doc.paragraphs·doc.tables는 각각 별도 평면 리스트라 순서 정보가 없다.
-    body = doc.element.body
-    for child in body.iterchildren():
-        if child.tag == qn("w:p"):
-            line = para_line(Paragraph(child, doc))
-            if line is None:
-                continue
-            if isinstance(line, tuple):
-                if not first_heading_seen:
-                    title = line[1]; first_heading_seen = True
-                else:
-                    parts.append("# " + line[1])
-            else:
-                parts.append(line)
-        elif child.tag == qn("w:tbl"):
-            n_tables += 1
-            parts += table_lines(Table(child, doc))
-
-    md = ("---\n"
-          'source_docx: "%s"\n'
-          'source_sha256: "%s"\n'
-          "converted_by: D1\n"
-          'converted_at: "%s"\n'
-          "paragraphs: %d\n"
-          "tables: %d\n"
-          'note: "docx 레인은 스킬·raw 계약에 아직 없음 — 계약 확정 전 임시 변환"\n'
-          "---\n\n# %s\n\n%s\n" % (rel, sha(dst), TODAY, len(doc.paragraphs),
-                                       n_tables, title, "\n\n".join(parts)))
-    return emit(src.stem + ".md", md), n_tables
-
+HANDLERS = {
+    ".hwpx": ("H1", conv_hwpx, "문자"),
+    ".pdf":  ("S2", conv_pdf,  "표행"),
+    ".xlsx": ("X1", conv_xlsx, "시트"),
+    ".pptx": ("P1", conv_pptx, "슬라이드"),
+    ".docx": ("D1", conv_docx, "표"),
+}
 
 if __name__ == "__main__":
-    handlers = {".hwpx": ("H1", conv_hwpx, "문자"), ".pdf": ("S2", conv_pdf, "표행"),
-                ".pptx": ("P1", conv_pptx, "슬라이드"), ".docx": ("D1", conv_docx, "표")}
-    files = sorted(SRC.iterdir())
     n = 0
-    for f in files:
-        h = handlers.get(f.suffix.lower())
-        if not h: continue
+    for f in sorted(SRC.iterdir()):
+        h = HANDLERS.get(f.suffix.lower())
+        if not h:
+            continue
         strat, fn, unit = h
         size, metric = fn(f)
         n += 1
-        print("  %s  %6d B  %-46s %4d %s" % (strat, size, f.stem[:46], metric, unit))
-    print("변환 %d종 → Clippings/ (원본은 raw/ 보존)" % n)
+        print("  %s  %6d B  %-44s %4d %s" % (strat, size, f.stem[:44], metric, unit))
+    print("변환 %d종 → Clippings/ (원본은 raw/<확장자>/ 보존)" % n)

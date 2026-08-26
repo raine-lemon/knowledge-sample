@@ -4,7 +4,12 @@
 import os, re, pathlib, sys
 import data as D
 
-CLIP = pathlib.Path(os.path.expanduser("~/personal-knowledge/Clippings"))
+# 인제스트 전에는 Clippings/, 인제스트 후에는 raw/ 루트에 원문이 있다.
+# 두 상태 모두에서 검증이 돌도록 파일이 있는 쪽을 자동으로 고른다.
+_VAULT = pathlib.Path(os.path.expanduser("~/knowledge-sample"))
+CLIP = _VAULT / "Clippings"
+if not any(CLIP.glob("*.md")):
+    CLIP = _VAULT / "raw"
 ok, bad = [], []
 
 def read(name):

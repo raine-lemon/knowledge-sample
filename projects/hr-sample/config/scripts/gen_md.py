@@ -4,7 +4,7 @@ md는 변환이 필요 없으므로 Clippings/ 로 직접 들어간다."""
 import os
 import data as D
 
-CLIP = os.path.expanduser("~/personal-knowledge/Clippings/")
+CLIP = os.path.expanduser("~/knowledge-sample/Clippings/")
 FIX = "> " + D.FIXTURE_NOTE
 
 def w(name, text):
@@ -186,7 +186,7 @@ def minutes():
 
 ## 2. 개정안 심의
 
-### 2-1. 보정회의 의무화 (신설 제7조)
+### 2-1. 보정회의 의무화 (신설 제11조)
 
 - 2차 평가자 전원 참석 의무
 - 등급 변경 시 사유 기록·보존 의무
@@ -196,7 +196,7 @@ def minutes():
 회의록에 상향·하향 건수를 남겨 매 차수 공개할 것을 요청.
 → 수용. 반기 리포트에 보정 결과를 포함하기로 함.
 
-### 2-2. 이의신청 기한 단축 (제8조)
+### 2-2. 이의신청 기한 단축 (제12조)
 
 - 신청 기한 14일 → **7일**
 - 심의 기한 30일 → **14일**
