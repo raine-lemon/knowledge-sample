@@ -10,13 +10,16 @@ milestones:
   - name: "문서 간 수치 정합성 자동 검증 (65 assertion)"
     due: 2026-08-26
     done: true
+  - name: "raw-layout 공식 레인(repo-doc 스냅샷·screenshots) 채우기"
+    due: 2026-08-26
+    done: true
   - name: "pptx·docx 레인 계약 확정"
     due:
     done: false
   - name: "첫 인제스트 실행 — wiki 컴파일 결과 검증"
     due:
     done: false
-next_action: "pptx·docx 레인 계약(정식화 또는 제외) 확정 후 커밋, 이어서 첫 인제스트 실행"
+next_action: "pptx·docx 레인 계약(정식화 또는 제외) 확정, 이어서 첫 인제스트 실행"
 ---
 
 # hr-sample
@@ -53,6 +56,34 @@ vault의 인제스트 파이프라인과 질의 기능을 **실제 업무 문서
 
 원본은 `raw/pdf/`·`raw/hwp/`·`raw/pptx/`·`raw/docx/`(1.2MB)에, 변환 MD는
 `Clippings/`(180KB, 34건 — 템플릿 기본 샘플 1건 포함)에 있다.
+
+### 공식 raw-layout 레인 (docs/raw-layout.md 계약)
+
+pptx·docx가 계약에 없는 임시 레인인 것과 달리, 아래 둘은 `docs/raw-layout.md`가
+**직접 규정한** 레인이다. 서브에이전트 3개를 병렬로 띄워 repo-doc 스냅샷을,
+screenshots는 직접 생성해 채웠다.
+
+| 레인 | 문서 | 건수 | 근거 |
+| --- | --- | --- | --- |
+| repo-doc 스냅샷 (§2) | 등급분포 검증기·OKR 확정 알리미·평가 근거기록 검색기 설계 3종 | 3 | `vault-promote.md` 패턴, capture header 완전 준수 |
+| screenshots/YYYY-MM-DD/ (§3) | Slack #people-ops 대화, HR 시스템 등급분포 대시보드 | 2쌍(png+ocr.md) | `raw-layout.md` §3 |
+
+**repo-doc 스냅샷**은 가상 내부 repo `narintech/hr-tools`(등록된 GitHub-linked
+프로젝트 아님 — capture header `note`에 명시)에서 사내 인사 도구 3종의 설계 문서를
+승격한 형태다. 「인사평가 운영지침」 조문(제5조·제6조·제10~13조·제15조)과
+`data.py`의 실측 수치(등급 분포, OKR 확정률 5개 차수 추이)를 정확히 인용한다.
+Clippings/를 거치지 않고 `raw/` 루트에 직접 들어간다 — 계약상 승격 워크플로는
+클리핑 인제스트와 별도 레인이기 때문이다.
+
+이 과정에서 서브에이전트 하나가 실제로 유용한 검증을 했다: 프롬프트에 내가
+"2026H1 리포트 §2에 '3개 조직 D=0' 문구가 있다"고 잘못 지시했는데, 에이전트가
+원문에 없다는 걸 확인하고 지어내지 않은 채 가상 시나리오로 명확히 분리 표기했다
+(전사 집계 수치는 실제 리포트와 정확히 일치시킴).
+
+**screenshots**는 `telegram-screenshot-digest.md` 스킬 본문이 이 vault에 없어
+`.ocr.md`의 필드 구성을 다른 레인(H1/S2/P1/D1)의 frontmatter 패턴에서 유추했다
+— `source_image`·`source_sha256_prefix`·`captured`·`ocr_engine`·`note`. 실제
+스킬 계약과 다를 수 있다.
 
 ### 데이터 모델 — 무엇이 서로 맞물리는가
 
@@ -93,6 +124,12 @@ vault의 인제스트 파이프라인과 질의 기능을 **실제 업무 문서
   `note` 키에 이 사실을 남겼다. 정식화하려면 `docs/raw-layout.md`에 레인을 추가하고
   스킬을 만들어야 하고, 그럴 생각이 없으면 커밋 전에 `raw/pptx/`·`raw/docx/`와
   해당 MD 8건을 제거해야 한다.
+- **screenshots `.ocr.md` 필드가 추정치다.** 실제 `telegram-screenshot-digest.md`
+  스킬 본문을 확보하면 `raw/screenshots/2026-08-26/*.ocr.md` 2건의 frontmatter를
+  정본 계약에 맞춰 재작성해야 할 수 있다.
+- **repo-doc 스냅샷의 `narintech/hr-tools`는 등록된 프로젝트가 아니다.**
+  `projects/@narintech/hr-tools/`로 실제 등록하려면 `github-project-link` 스킬
+  절차를 별도로 밟아야 한다 (지금은 순수 콘텐츠 픽스처 목적으로만 존재).
 
 ## Related Wiki
 
@@ -107,6 +144,12 @@ vault의 인제스트 파이프라인과 질의 기능을 **실제 업무 문서
   vault에 없던 4번째 원본 포맷. `data.py`에 부서 배분(최대잔여법)·급여 밴드·연차
   정책·채용 퍼널·퇴사사유 배분 추가. 검증 65건 전부 통과. `convert.py`에 docx 핸들러
   (`converted_by: D1`) 추가 — pptx와 동일하게 계약 미확정 임시 레인.
+- 2026-08-26: `docs/raw-layout.md`가 공식 규정한 나머지 2개 레인(repo-doc 스냅샷·
+  screenshots)을 채웠다. repo-doc 스냅샷 3종은 서브에이전트 병렬 실행으로 생산
+  (가상 내부 repo `narintech/hr-tools`, capture header 완전 준수). screenshots는
+  Pillow로 Slack 대화·HR 대시보드 목업 2쌍(png+ocr.md) 직접 생성. 저장소를
+  `personal-knowledge` → `knowledge-sample`로 개명(GitHub rename + 로컬 디렉터리 +
+  `team-settings.yaml` 좌표 갱신).
 
 ## Outputs
 
