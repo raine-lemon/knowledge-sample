@@ -161,6 +161,7 @@ Clippings/를 거치지 않고 `raw/` 루트에 직접 들어간다 — 계약�
 | --- | --- |
 | `outputs/2025-annual-hr-report.md` | 2025년(작년) 연간 인사운영 보고서 분석판 — 진실원. 1차 리포트 17건 재집계, 원문 간 불일치 3건 기록 |
 | `outputs/2025-annual-hr-report.html` | 같은 보고서의 시각화 뷰 (SVG 차트 10종·표 10종, light/dark). `.md`에서 재생성하는 뷰이며 진실원이 아니다 |
+| `outputs/2026-onboarding-orientation.pptx` | 신입 온보딩 오리엔테이션 덱 12슬라이드. 교육자료(2026)·SOP·wiki 두 문서(30-60-90, 수습평가)·전환율 실측을 세션 진행용으로 재구성 |
 
 생성 스크립트는 `config/scripts/`에 있다. 전체 재생성:
 
@@ -174,6 +175,14 @@ python3 gen_docx.py      # 서식·문서 5종
 python3 gen_md.py        # 회의록·클리핑 7종 → Clippings/ 직행
 python3 convert.py       # 원문 26종 → raw/ 보존 + Clippings/ 투입
 python3 verify_corpus.py # 산출물 교차 검증 (65 assertion)
+```
+
+온보딩 덱만 재생성 (Node + pptxgenjs, 다른 생성기와 다른 툴체인):
+
+```bash
+cd projects/hr-sample/config/scripts
+npm install pptxgenjs
+node gen_onboarding_deck.js ../../outputs/2026-onboarding-orientation.pptx
 ```
 
 `gen_pdf.py`·`gen_pptx.py`·`gen_docx.py`·`convert.py`는 `reportlab`, `python-pptx`,
