@@ -11,7 +11,7 @@ vault:
   name: "personal knowledge vault"    # 보고서 제목 등 사용자-대면 문서에 쓰는 vault 표시명
 
 github:
-  vault_repo: "raine-lemon/personal-knowledge"  # 이 vault의 GitHub 좌표 (org/repo)
+  vault_repo: "raine-lemon/knowledge-sample"  # 이 vault의 GitHub 좌표 (org/repo)
   default_reviewer: "raine-lemon"  # PR 기본 리뷰어
 
 mail:
