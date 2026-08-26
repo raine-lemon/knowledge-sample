@@ -1,0 +1,22 @@
+# team-settings.yaml — 조직·개인 배포 값의 단일 출처
+#
+# 팀 스킬(projects/second-brain/config/skills/)은 범용 절차서다. 수신자·리뷰어·
+# 조직 이름 같은 배포 값은 스킬 본문에 하드코딩하지 않고 이 파일의 키로 참조한다.
+# 다른 조직/vault에 이식할 때는 이 파일만 바꾸면 된다.
+# 값 변경은 사용자 승인 사항이다 (특히 mail.*: 발송 대상 변경).
+#
+# 이 저장소는 초기 부트스트랩 템플릿이다. clone 후 아래 값을 본인/팀 값으로 교체한다.
+
+vault:
+  name: "knowledge vault"          # 보고서 제목 등 사용자-대면 문서에 쓰는 vault 표시명
+
+github:
+  vault_repo: "lemoncloud-io/2nd-brain"  # 이 vault의 GitHub 좌표 (org/repo). clone 후 본인/팀 저장소로 교체
+  default_reviewer: "steve-lemon"  # PR 기본 리뷰어. clone 후 본인/팀 리뷰어로 교체
+
+mail:
+  weekly_report:
+    to: ["team@example.com"]       # 팀 메일. 실제 수신자로 교체 (변경은 사용자 승인 사항)
+    cc_requester: true             # Google Groups는 작성자 본인에게 재배달하지 않음 (2026-08-12 실측)
+    subject_prefix: "[weekly]"
+    trigger_phrase: "주간 보고"     # 이 문구 입력 = 생성(당일분 있으면 생략)+발송 승인

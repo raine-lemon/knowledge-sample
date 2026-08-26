@@ -1,0 +1,11 @@
+filters:
+  and:
+    - type == "idea"
+    - '!file.inFolder("templates")'
+views:
+  - type: table
+    name: Ideas
+    order:
+      - file.name
+      - status
+      - first-seen

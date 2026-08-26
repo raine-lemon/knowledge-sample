@@ -1,0 +1,22 @@
+filters:
+  and:
+    - type == "project"
+    - '!file.inFolder("templates")'
+views:
+  - type: table
+    name: Active
+    filters:
+      and:
+        - status != "done"
+    order:
+      - file.name
+      - status
+      - goal
+      - due
+      - next_action
+  - type: table
+    name: All
+    order:
+      - file.name
+      - status
+      - due

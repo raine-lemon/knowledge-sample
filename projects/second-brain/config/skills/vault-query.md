@@ -1,0 +1,89 @@
+---
+name: vault-query
+description: >
+  사용자의 knowledge vault에 쿼리를 던져 wiki 기반 답변을 받는다. 사용자가 vault
+  안의 개념·비교·정리를 물어볼 때 이 스킬을 사용한다. (단순 잡담이나 볼트와
+  무관한 질문에는 사용하지 않는다.)
+origin: lemoncloud-io/knowledge@01f358b:projects/second-brain/config/skills/vault-query.md
+---
+
+# Vault Query (Hermes-native)
+
+이 스킬은 Hermes의 현재 모델이 GPT이든 Claude이든 같은 방식으로 wiki 기반
+답변을 생성하도록 만든 provider-agnostic 지시서다.
+
+## 언제 사용하는가
+
+- 사용자가 vault에 저장된 개념/도구/모델에 대해 질문할 때
+- 여러 wiki 아티클을 종합해야 하는 질문일 때
+- 사용자가 "내 vault 기준", "저장된 문서 기준", "wiki 기준", "Obsidian 기준"처럼
+  vault 근거를 명시할 때
+
+## 절차
+
+런타임에서는 `~/knowledge`로 조용히 fallback하지 않는다. 사용자가 `VAULT_DIR`를
+명시하면 그 값을 우선한다. 명시되지 않았지만 현재 작업 루트가 Obsidian vault 구조
+(`VAULT_RULES.md`, `wiki/`, `raw/`, `outputs/`, `templates/`)를 갖고 있으면 현재
+작업 루트를 `VAULT_DIR`로 추론한다. 확신할 수 없으면 답변을 생성하기 전에 사용자에게
+vault 경로를 확인한다.
+
+1. 사용자의 질문을 임의로 축약하지 말고 원문 그대로 작업 범위로 유지한다.
+2. `$VAULT_DIR/wiki/VAULT_MEMORY.md`와
+   `$VAULT_DIR/wiki/INDEX.md`를 먼저 읽는다.
+3. `$VAULT_DIR/templates/query-output.md`가 있으면 읽고 출력 문서 구조로 사용한다.
+4. 질문과 관련된 `wiki/` 문서, `wiki/topics/` 페이지, 필요 시 최근 `outputs/`를 읽는다.
+   관련 문서가 **하나도 안 잡히면** 그대로 "vault에 없음"으로 넘기지 말고 카나리아를
+   한 번 친다: `rg -l "^## Summary" "$VAULT_DIR/wiki/" | head -1` (색인 3건
+   `INDEX`·`TOPIC_MAP`·`VAULT_MEMORY`을 뺀 wiki 노트 107건이 전부 `## Summary`를 갖는다 —
+   2026-08-18 실측. 정상이면 반드시 1줄 나온다). 여기서도 비면
+   검색이 고장난 것이지 vault에 근거가 없는 게 아니다 — 답변에 `리콜 실패(도구)`로
+   적고 "vault에 없음"으로 단정하지 않는다. 검색 명령의 stderr는 억제하지 않는다
+   (`2>/dev/null`은 에러를 빈 결과로 바꿔 둘을 구별 불가능하게 만든다).
+   근거: [[knowledge-consumption-gate]].
+5. 답변은 vault 안의 근거를 우선한다. vault에 없는 내용은 추론임을 명시한다.
+6. `$VAULT_DIR/outputs/`가 없으면 먼저 생성한다.
+7. 답변 문서를 `$VAULT_DIR/outputs/YYYY-MM-DD-query-slug.md`에 저장한다.
+8. 저장된 파일을 다시 확인한다.
+9. 최종 응답에는 핵심 답변과 저장된 output 파일 경로를 함께 알려준다.
+
+## 답변 문서 형식
+
+```markdown
+# <Question title>
+
+## Answer
+
+<concise answer in Korean>
+
+## Evidence
+
+- [[related-note-1]]
+- [[related-note-2]]
+
+## Notes
+
+- 조회 판정: 채택 [[slug]] | 기각([[slug]], 사유) | 미해당 | 리콜 실패(도구) — 넷 중 하나
+- Vault에 없는 내용은 "추론" 또는 "추가 확인 필요"로 표시한다.
+```
+
+`미해당`(정상 검색, 근거 없음)과 `리콜 실패(도구)`(검색 고장)는 다른 값이다. 뭉개면
+도구 고장이 "vault에 없음"으로 기록되고 그 기록이 다음 조회를 오도한다.
+
+## 트리거 예시
+
+- "내 vault 기준으로 Hermes와 Obsidian의 역할 차이를 정리해줘."
+- "저장된 wiki 문서 기준으로 multi-agent orchestration의 핵심 패턴을 요약해줘."
+- "이 vault에 정리된 OpenAI Codex와 Claude Code의 차이를 비교해줘."
+- "subscription-vs-api-billing 문서를 근거로 비용 리스크를 정리해줘."
+- "ai-agents 토픽에 있는 문서들을 종합해서 다음 액션을 추천해줘."
+- "최근 outputs까지 참고해서 이 주제의 결론만 다시 요약해줘."
+
+## 금지 사항
+
+- 질문 내용을 임의로 재해석하거나 요약해서 축약된 프롬프트로 바꾸지 않는다
+- 답변을 vault 밖(예: 채팅 로그만)에 남기고 `outputs/`에 저장하지 않는 것은
+  금지 — 지식이 누적되지 않기 때문이다
+- output markdown 파일을 생성하거나 갱신하기 전에는 작업을 완료하지 않는다
+- `templates/query-output.md`가 있는데 임의 구조로 query output을 만들지 않는다
+- `raw/` 원문을 수정하지 않는다
+- vault에 근거가 없는데 단정적으로 답하지 않는다

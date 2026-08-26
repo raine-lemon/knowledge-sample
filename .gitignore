@@ -1,0 +1,14 @@
+.DS_Store
+.obsidian/
+.claude/*
+!.claude/skills/
+.locks/
+.claudian/
+tmp/
+
+# Python runtime state
+__pycache__/
+*.pyc
+
+# personal daily work/research notes — local-only, never shared with the team
+private/
