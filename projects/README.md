@@ -10,6 +10,7 @@
 |---------|------|------|
 | [second-brain](second-brain/) | active | 이 vault의 구조·워크플로우 지속 개선 (3-루프 가동) |
 | [@lemoncloud-io](@lemoncloud-io/) | 1 repos | GitHub 연결 프로젝트 |
+| [hr-sample](hr-sample/) | active | 인사 도메인 목업 코퍼스 — 인제스트·질의 실증 |
 
 > 상태·마감·다음 행동의 진실원은 각 프로젝트 README의 frontmatter다. 루트 `projects.base` 대시보드에서 집계된다. 완료(`done`) 프로젝트는 `archive/projects/`로 이동한다.
 
