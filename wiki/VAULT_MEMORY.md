@@ -24,10 +24,10 @@ bytes, not lines. 현재 상태와 포인터만 둔다: 정책은 `VAULT_RULES.m
 - Last Sync: 2026-08-14 — 운영 vault의 지침 계층을 이식 (VAULT_RULES 재구조화, CLAUDE/AGENTS
   재작성, `docs/raw-layout.md`·`docs/github-linked-projects.md` 신설, team-settings.yaml 도입)
 - Last Lint Pass: 2026-07-31 — 첫 pass, 정책 정합성 감사, P0 4 / P1 3 / P2 3 / P3 7 (리포트 미보존)
-- Last Ingest: 2026-08-26 (raine-lemon) — 37 clippings -> 13 new / 0 updated wiki notes
-- Volume to date: 1 ingest run / 37 clippings 처리 — `Clippings/` 0건, wiki article 13개, topic 2개
+- Last Ingest: 2026-09-08 (raine-lemon) — 1 clippings -> 2 new / 0 updated wiki notes (PR #3)
+- Volume to date: 2 ingest runs / 38 clippings 처리 — `Clippings/` 0건, wiki article 15개, topic 2개
 - Ingest history: `docs/vault-ingest-log.md` — 실행별 상세, append-only, 세션 시작 시 로드하지 않음
-- Verification queue: `grep -rln "^status: needs-update" wiki/*.md` — 2026-08-26 기준 0건 (본문 needs-update 표기는 13개 문서)
+- Verification queue: `grep -rln "^status: needs-update" wiki/*.md` — 2026-09-08 기준 0건 (본문 needs-update 표기는 14개 문서)
 - Canonical lists: wiki 문서 목록 `wiki/INDEX.md`, 프로젝트 인덱스 `projects/README.md`
 
 ## Open Threads
