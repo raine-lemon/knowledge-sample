@@ -4,7 +4,7 @@ kind: promotion
 run_date: "2026-09-14"
 author: raine-lemon
 summary: "Drive 사본 5건 중 4건은 자격증명이라 제외. 남은 1건은 clipping이 아닌 repo 문서로 판정, dou-app deploy 정본을 승격했다. 레인 단독, wiki 0건."
-pr:
+pr: 4
 processed: 1
 new_notes: 0
 updated_notes: 0
