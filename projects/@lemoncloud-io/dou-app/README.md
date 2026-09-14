@@ -7,7 +7,7 @@ status: active
 goal: "React Native 하이브리드 모바일 앱을 포함한 DoU Nx 모노레포의 구조·배포 파이프라인을 vault 추적 계층에 연결한다."
 due:
 milestones: []
-next_action: "goal·next_action 최종값을 사용자 승인 후 확정한다 (등록 시 초안)."
+next_action: ""
 last_synced: 2026-09-14
 ---
 
@@ -28,4 +28,4 @@ Active. `lemoncloud-io` org의 Nx 모노레포로 web·mobile·admin 4개 앱과
 ## Sync Notes
 
 - 2026-09-14: `vault-promote` 실행 중 미등록 repo임이 확인되어 등록. 로컬 클론은 `$GITHUB_DIR/lemoncloud-io/dou-app`. 추적 브랜치 `develop`.
-- `goal`·`next_action`은 등록 시 초안이다. 최종값은 사용자가 정한다 (`docs/github-linked-projects.md` § Write Boundaries).
+- 2026-09-14: `goal`은 확정, `next_action`은 대기 액션 없음으로 비웠다 (사용자 확정 — `docs/github-linked-projects.md` § Write Boundaries).
